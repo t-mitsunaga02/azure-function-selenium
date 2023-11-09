@@ -1,3 +1,8 @@
+
+pip==23.1.2
 azure-functions
-azure-storage-blob
+azure-functions-durable>=1.2.4
+azure-storage-blob==12.8.0
 azure-identity
+
+selenium
