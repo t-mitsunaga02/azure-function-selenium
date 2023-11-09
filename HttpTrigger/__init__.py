@@ -16,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
 
-    driver = webdriver.Chrome("/usr/local/bin/chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome("/usr/local/bin/chromedriver", options=chrome_options)
     driver.get('http://www.ubuntu.com/')
     links = driver.find_elements(By.TAG_NAME, "a")
     link_list = ""
