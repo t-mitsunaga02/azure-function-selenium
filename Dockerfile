@@ -13,16 +13,10 @@ RUN apt-get update \
 
 # 1. Install Chrome (root image is debian)
 # See https://stackoverflow.com/questions/49132615/installing-chrome-in-docker-file
-ARG CHROME_VERSION="google-chrome-stable"
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
-
-  && apt-get update && apt-get install -y google-chrome-stable \
-#  && apt-get update -qqy \
-#  && apt-get -qqy install \
-#    ${CHROME_VERSION:-google-chrome-stable} \
-  && rm /etc/apt/sources.list.d/google-chrome.list \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+# ARG CHROME_VERSION="google-chrome-stable"
+RUN apt-get update
+RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb \
+  && apt-get install -y --allow-downgrades /tmp/chrome.deb
 
 # 2. Install Chrome driver used by Selenium
 RUN LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
@@ -34,7 +28,6 @@ ENV PATH="/usr/local/bin/chromedriver:${PATH}"
 # 3. Install selenium in Python
 
 RUN pip install -U selenium
-#pip install -U selenium
 
 # 4. Finally, copy python code to image
 COPY . /home/site/wwwroot
