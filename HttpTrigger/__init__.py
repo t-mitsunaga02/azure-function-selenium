@@ -22,8 +22,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     driver = webdriver.Chrome(service=service, options=options)
     logging.info(driver)
-    driver.get('http://www.ubuntu.com/')
-    links = driver.find_elements(By.TAG_NAME, "a")
+    driver.get('http://abehiroshi.la.coocan.jp/')
+    links = driver.find_element(By.TAG_NAME, "a")
     link_list = ""
     for link in links:
         if link_list == "":
