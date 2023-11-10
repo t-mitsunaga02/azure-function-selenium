@@ -23,7 +23,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     driver = webdriver.Chrome(service=service, options=options)
     logging.info(driver)
     driver.get('http://abehiroshi.la.coocan.jp/')
-    links = driver.find_element(By.TAG_NAME, "a")
+    links = driver.find_elements(By.TAG_NAME, "img")
     link_list = ""
     for link in links:
         if link_list == "":
