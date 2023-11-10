@@ -28,8 +28,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     for link in links:
         if link_list == "":
             link_list = link.text
+            logging.info(link_list)
         else:
             link_list = link_list + ", " + link.text
+            logging.info(link_list)
 
     # create blob service client and container client
     credential = DefaultAzureCredential()
