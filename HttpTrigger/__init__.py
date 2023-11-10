@@ -2,6 +2,7 @@ import logging
 
 import azure.functions as func
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from azure.identity import DefaultAzureCredential, ClientSecretCredential
 from azure.storage.blob import BlobServiceClient
@@ -15,10 +16,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    service = Service(executable_path=r"/usr/local/bin/chromedriver")
 
     logging.warn(options)
 
-    driver = webdriver.Chrome("/usr/local/bin/chromedriver", options=options)
+    driver = webdriver.Chrome(service=service, options=options)
     logging.warn(driver)
     driver.get('http://www.ubuntu.com/')
     links = driver.find_elements(By.TAG_NAME, "a")
