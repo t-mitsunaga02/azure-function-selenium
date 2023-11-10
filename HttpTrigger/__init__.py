@@ -21,7 +21,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.warn(options)
 
     driver = webdriver.Chrome(service=service, options=options)
-    logging.info(driver)
+    logging.warn(driver)
     driver.get('http://www.ubuntu.com/')
     links = driver.find_elements(By.TAG_NAME, "a")
     link_list = ""
