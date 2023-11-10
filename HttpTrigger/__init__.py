@@ -11,14 +11,14 @@ import os
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request. 12:38')
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
 
-    logging.warn(chrome_options)
+    logging.warn(options)
 
-    driver = webdriver.Chrome("/usr/local/bin/chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome("/usr/local/bin/chromedriver", options=options)
     logging.warn(driver)
     driver.get('http://www.ubuntu.com/')
     links = driver.find_elements(By.TAG_NAME, "a")
