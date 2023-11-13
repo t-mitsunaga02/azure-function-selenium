@@ -18,26 +18,24 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     options.add_argument('--disable-dev-shm-usage')
     service = Service(executable_path=r"/usr/local/bin/chromedriver")
 
-    logging.warn(options)
-
     driver = webdriver.Chrome(service=service, options=options)
     logging.info(driver)
     driver.get('http://abehiroshi.la.coocan.jp/')
-    links = driver.find_elements(By.TAG_NAME, "img")
+    links = driver.find_elements(By.TAG_NAME, "a")
     link_list = ""
     for link in links:
         if link_list == "":
             link_list = link.text
-            logging.info(link_list)
         else:
             link_list = link_list + ", " + link.text
-            logging.info(link_list)
 
     # # create blob service client and container client
     # credential = DefaultAzureCredential()
     # storage_account_url = "https://" + os.environ["par_storage_account_name"] + ".blob.core.windows.net"
     # client = BlobServiceClient(account_url=storage_account_url, credential=credential)
     blob_name = "testscrape" + str(datetime.now()) + ".txt"
+
+    logging.info(link_list)
 
     # BLOBへの接続
     connect_str = os.getenv("AzureWebJobsStorage")
