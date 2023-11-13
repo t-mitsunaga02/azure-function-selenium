@@ -37,7 +37,74 @@ class Scrape():
         if dropcolumns is not None:
             self.df.drop(dropcolumns,axis=1,inplace=True) 
         self.df.to_csv(filename,index=False,encoding="shift-jis",errors="ignore")
-  
+
+    def add_df(self,values,columns,omits = None):
+        '''
+        指定した値を　DataFrame に行として追加する
+        omits に削除したい文字列をリストで指定可能
+ 
+        Params
+        ---------------------      
+        values:[str]
+            列名
+        omits:[str]
+            削除したい文字、又は文字列            
+        '''
+        if omits is not None:
+            values = self.omit_char(values,omits)
+            columns = self.omit_char(columns,omits)
+        
+        df = pd.DataFrame(values,index=self.rename_column(columns))
+        self.df = pd.concat([self.df,df.T])
+
+    def omit_char(self,values,omits):
+        '''
+        リストで指定した文字、又は文字列を削除する
+ 
+        Params
+        ---------------------      
+        values:str
+            対象文字列
+        omits:str
+            削除したい文字、又は文字列            
+ 
+        Returns
+        ---------------------
+        return :str
+            不要な文字を削除した文字列
+        '''
+        for n in range(len(values)):
+            for omit in omits:
+                values[n] = values[n].replace(omit,'')
+        return values
+
+    def rename_column(self,columns):
+        '''
+        重複するカラム名の末尾に連番を付与し、ユニークなカラム名にする
+            例 ['A','B','B',B'] → ['A','B','B_1','B_2']
+ 
+        Params
+        ---------------------      
+        columns: [str]
+            カラム名のリスト
+          
+        Returns
+        ---------------------
+        return :str
+            重複するカラム名の末尾に連番が付与されたリスト
+        '''
+        lst = list(set(columns))
+        for column in columns:
+            dupl = columns.count(column)
+            if dupl > 1:
+                cnt = 0
+                for n in range(0,len(columns)):
+                    if columns[n] == column:
+                        if cnt > 0:
+                            columns[n] = f'{column}_{cnt}'
+                        cnt += 1
+        return columns
+
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
@@ -48,20 +115,21 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     service = Service(executable_path=r"/usr/local/bin/chromedriver")
 
     driver = webdriver.Chrome(service=service, options=options)
-    driver.get('http://abehiroshi.la.coocan.jp/')
+    driver.get('http://www.ubuntu.com/')
     links = driver.find_elements(By.TAG_NAME, "a")
     logging.warn(links)
     link_list = ""
     for link in links:
         if link_list == "":
             link_list = link.text
+            logging.info(links)
         else:
             link_list = link_list + ", " + link.text
-
+            logging.info(links)
 
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
-    csv_buffer = io.StringIO()
-    link_list.to_csv(csv_buffer, encoding='utf_8', index=False)
+    # csv_buffer = io.StringIO()
+    # link_list.to_csv(csv_buffer, encoding='utf_8', index=False)
 
 
     # # create blob service client and container client
