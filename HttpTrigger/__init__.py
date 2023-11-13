@@ -33,12 +33,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             link_list = link_list + ", " + link.text
             logging.info(link_list)
 
-    # create blob service client and container client
-    credential = DefaultAzureCredential()
-    storage_account_url = "https://" + os.environ["par_storage_account_name"] + ".blob.core.windows.net"
-    client = BlobServiceClient(account_url=storage_account_url, credential=credential)
+    # # create blob service client and container client
+    # credential = DefaultAzureCredential()
+    # storage_account_url = "https://" + os.environ["par_storage_account_name"] + ".blob.core.windows.net"
+    # client = BlobServiceClient(account_url=storage_account_url, credential=credential)
     blob_name = "testscrape" + str(datetime.now()) + ".txt"
-    blob_client = client.get_blob_client(container=os.environ["par_storage_container_name"], blob=blob_name)
+
+    # BLOBへの接続
+    connect_str = os.getenv("AzureWebJobsStorage")
+    
+    # Create a blob client using the local file name as the name for the blob
+    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+    blob_client = blob_service_client.get_blob_client("scrapefile", blob=blob_name)
+
     blob_client.upload_blob(link_list)
 
     return func.HttpResponse(
