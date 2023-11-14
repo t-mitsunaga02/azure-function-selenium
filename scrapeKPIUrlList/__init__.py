@@ -4,12 +4,10 @@ import azure.functions as func
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from azure.identity import DefaultAzureCredential, ClientSecretCredential
 from azure.storage.blob import BlobServiceClient
 from datetime import datetime
 import pandas as pd
 import os
-import io
 
 #新しいクラス（モジュール）を作る 
 class Scrape():
