@@ -8,6 +8,7 @@ from azure.storage.blob import BlobServiceClient
 from datetime import datetime
 import pandas as pd
 import os
+import io
 
 #新しいクラス（モジュール）を作る 
 class Scrape():
@@ -106,6 +107,28 @@ class Scrape():
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
+    # BLOBへの接続
+    connect_str = os.getenv("AzureWebJobsStorage")
+    # Create a blob client using the local file name as the name for the blob
+    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+
+    # BLOB入出力先の設定
+    container_name = "scrapefile"
+    blob_name_in = "dashboard_KPI/modify/data/KPI_modify_POS_master_file.csv"
+    blob_name_out = "dashboard_KPI/raw/scrape/URL/testscrape" + str(datetime.now()) + ".txt"
+
+    # POSデータの読み込み
+    blob_client_in = blob_service_client.get_blob_client(container=container_name, blob=blob_name_in)
+    blob_data = blob_client_in.download_blob()
+    pos_data = blob_data.readall()
+
+    # DataFrame化
+    df = pd.read_csv(io.BytesIO(pos_data))
+    logging.info("DataFrame:")
+    logging.info(df.head())
+
+
+    # seleniumでURLリストを取得する
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
@@ -120,31 +143,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     for link in links:
         if link_list == "":
             link_list = link.text
-            logging.info(links)
         else:
             link_list = link_list + ", " + link.text
-            logging.info(links)
 
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
     # csv_buffer = io.StringIO()
     # link_list.to_csv(csv_buffer, encoding='utf_8', index=False)
 
-
-    # # create blob service client and container client
-    # credential = DefaultAzureCredential()
-    # storage_account_url = "https://" + os.environ["par_storage_account_name"] + ".blob.core.windows.net"
-    # client = BlobServiceClient(account_url=storage_account_url, credential=credential)
-    blob_name = "testscrape" + str(datetime.now()) + ".txt"
-
     logging.warn(link_list)
 
-    # BLOBへの接続
-    connect_str = os.getenv("AzureWebJobsStorage")
-    
-    # Create a blob client using the local file name as the name for the blob
-    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client("scrapefile", blob=blob_name)
-
+    # Blobへのアップロード
+    blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_out)
     blob_client.upload_blob(link_list)
 
     return func.HttpResponse(
