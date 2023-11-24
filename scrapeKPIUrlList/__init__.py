@@ -178,8 +178,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         time.sleep(5)
 
         ### 最初の検索結果のリンクを取得
-        first_result = driver.find_element_by_css_selector("h3")
-        first_link = first_result.find_element_by_xpath('..').get_attribute('href')
+        first_result = driver.find_element(By.CSS_SELECTOR, "h3")
+        first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
 
         logging.info("検索URL:")
         logging.info(first_link)
