@@ -133,7 +133,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     ## 対象製品の選定
     df_raw = df.filter(items=['ID','Item', 'BRAND'])
-    df_fix = df_raw['Item'] != 'Suppressed'
+    df_fix = df_raw[df_raw['Item'] != 'Suppressed']
 
     logging.info("Datafix:")
     logging.info(df_fix.head())
