@@ -156,7 +156,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     ## メーカー・製品毎にサイト検索するループ
     for data in df_fix:
         ## メーカー・製品名の抽出
-        search_word = data['BRAND'] + " " + data['Item']
+        search_word = f"{data['BRAND']} {data['Item']}"
+        logging.info("word:")
+        logging.info(search_word)
+        print(search_word)
 
         ## 価格コム検索
         ### Googleのトップページを開く
