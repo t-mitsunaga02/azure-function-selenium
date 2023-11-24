@@ -63,6 +63,6 @@ def get_url_kakaku(get_pos):
         #DataFrameに登録
         columns = ['ID','BRAND','Item','URL']
         values = [row['ID'],row['BRAND'],row['Item'],search_urllist] 
-        scr.add_df(values,columns,['<br>'])
+        scr.add_df(values,columns)
 
     return scr
