@@ -154,13 +154,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     driver = webdriver.Chrome(service=service, options=options)
 
     ## メーカー・製品毎にサイト検索するループ
-    for data in df_fix:
+    for index, row in df_fix.iterrows():
         logging.info("data:")
-        logging.info(data)
+        logging.info(f"{row['BRAND']} {row['Item']}")
 
         ## メーカー・製品名の抽出
-        brand_column = data['BRAND']
-        item_column = data['Item']
+        brand_column = row['BRAND']
+        item_column = row['Item']
         search_word = brand_column + " " + item_column
         logging.info("word:")
         logging.info(search_word)
