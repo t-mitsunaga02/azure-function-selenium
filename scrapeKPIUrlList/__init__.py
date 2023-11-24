@@ -135,6 +135,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     df_raw = df.filter(items=['ID','Item', 'BRAND'])
     df_fix = df_raw['Item'] != 'Suppressed'
 
+    logging.info("Datafix:")
+    logging.info(df_fix.head())
+
 ## 出力確認用
     df_string = df_fix.to_string()
     logging.info("DataFrameall:")
