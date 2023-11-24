@@ -37,4 +37,4 @@ RUN cd /home/site/wwwroot && \
     pip install -r requirements.txt
 
 # コマンドの実行
-CMD ["python", "./scrapeKPIUrlList/__init__.py"]
+CMD ["python", "C:/Users/t-mitsunaga/azure-function-selenium/scrapeKPIUrlList/__init__.py"]
