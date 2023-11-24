@@ -159,9 +159,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(f"{row['BRAND']} {row['Item']}")
 
         ## メーカー・製品名の抽出
-        brand_column = row['BRAND']
-        item_column = row['Item']
-        search_word = brand_column + " " + item_column
+        search_word = f"{row['BRAND']} {row['Item']}"
         logging.info("word:")
         logging.info(search_word)
 
@@ -170,7 +168,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         driver.get("https://www.google.com")
 
         ### 検索ボックスを見つける
-        search_box = driver.find_element_by_name("q")
+        search_box = driver.find_element(By.NAME, "q")
 
         ### 検索ワードを入力し、Enterキーを押して検索を実行
         search_box.send_keys("価格" + search_word)
