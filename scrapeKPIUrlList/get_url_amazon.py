@@ -29,31 +29,32 @@ def get_url_amazon(get_pos):
         time.sleep(3)
 
         ### 検索結果のリンクを収集
-        links = driver.find_elements(By.CSS_SELECTOR, "div.MjjYud")
+        links = driver.find_elements(By.CSS_SELECTOR, "h3")
 
         #検索結果を１つずつみて、リンク先のURLを抽出
         for link in links:
 
+            link_url = link.find_element(By.XPATH, '..').get_attribute('href')
             logging.info("link:")
-            logging.info(link.text)
+            logging.info(link_url)
             ## 製品名を含まないなら除外
-            if row['Item'] not in link.text:
+            if row['Item'] not in link_url:
                 break
             logging.info("1")
             ## 製品ページのパスがないなら除外
-            if "/dp/" not in link.text:
+            if "/dp/" not in link_url:
                 break
             logging.info("2")
             ## 英語ページなら除外
-            if "/-/en/" in link.text:
+            if "/-/en/" in link_url:
                 break
             logging.info("3")
             ## フィルタ製品ページなら除外
-            if "フィルタ―" in link.text:
+            if "フィルタ―" in link_url:
                 break
             logging.info("4")
 
-            parsed_url = urlparse(link.text).path
+            parsed_url = urlparse(link_url).path
 
             # 検索文字列の位置を見つける
             pos = parsed_url.find("/dp/")
