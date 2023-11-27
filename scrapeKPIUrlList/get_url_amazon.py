@@ -59,7 +59,7 @@ def get_url_amazon(get_pos):
             # 検索文字列の位置を見つける
             pos = parsed_url.find("/dp/")
 
-            asinID = link[pos + len("/dp/"): pos + len("/dp/") + 10]
+            asinID = link_url[pos + len("/dp/"): pos + len("/dp/") + 10]
 
             #DataFrameに登録
             columns = ['ID','BRAND','Item','asinID']
