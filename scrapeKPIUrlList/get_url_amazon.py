@@ -35,25 +35,25 @@ def get_url_amazon(get_pos):
         for link in links:
 
             logging.info("link:")
-            logging.info(link)
+            logging.info(link.text)
             ## 製品名を含まないなら除外
-            if row['Item'] not in link:
+            if row['Item'] not in link.text:
                 break
             logging.info("1")
             ## 製品ページのパスがないなら除外
-            if "/dp/" not in link:
+            if "/dp/" not in link.text:
                 break
             logging.info("2")
             ## 英語ページなら除外
-            if "/-/en/" in link:
+            if "/-/en/" in link.text:
                 break
             logging.info("3")
             ## フィルタ製品ページなら除外
-            if "フィルタ―" in link:
+            if "フィルタ―" in link.text:
                 break
             logging.info("4")
 
-            parsed_url = urlparse(link).path
+            parsed_url = urlparse(link.text).path
 
             # 検索文字列の位置を見つける
             pos = parsed_url.find("/dp/")
