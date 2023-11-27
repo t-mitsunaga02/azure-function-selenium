@@ -7,7 +7,7 @@ import time
 import pandas as pd
 from urllib.parse import urlparse
 
-def get_url_kakaku(get_pos):
+def get_url_yahoo(get_pos):
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
 

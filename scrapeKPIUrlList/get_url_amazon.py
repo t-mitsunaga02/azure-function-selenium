@@ -7,7 +7,7 @@ import time
 import pandas as pd
 from urllib.parse import urlparse
 
-def get_url_kakaku(get_pos):
+def get_url_amazon(get_pos):
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
 
@@ -25,7 +25,7 @@ def get_url_kakaku(get_pos):
 
         ## 価格コム検索
         ### Googleのトップページを開く
-        driver.get("https://www.google.com")
+        driver.get(f"https://www.google.com/search?q=https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}")
 
         ### 検索ボックスを見つける
         search_box = driver.find_element(By.NAME, "q")
