@@ -3,6 +3,7 @@ from .classfile import Scrape
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
 import pandas as pd
 from urllib.parse import urlparse
@@ -35,8 +36,10 @@ def get_url_yahoo(get_pos):
 
         #検索結果を１つずつみて、リンク先のドメインがyahooショッピングのproductsカテゴリのページかどうか判定
         for link in links:
-                domain = link.find_element(By.CSS_SELECTOR,'cite.qLRx3b.tjvcx.GvPZzd.cHaqb').text
-                domain = ""
+                try:
+                    domain = link.find_element(By.CSS_SELECTOR,'cite.qLRx3b.tjvcx.GvPZzd.cHaqb').text
+                except NoSuchElementException:
+                    domain = ""
                 if domain == "https://shopping.yahoo.co.jp › products":
                     target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
                     print(target_url)
