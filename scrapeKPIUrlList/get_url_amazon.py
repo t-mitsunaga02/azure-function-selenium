@@ -39,19 +39,19 @@ def get_url_amazon(get_pos):
             logging.info(link_url)
             ## 製品名を含まないなら除外
             if row['Item'] not in link_url:
-                break
+                continue
             logging.info("1")
             ## 製品ページのパスがないなら除外
             if "/dp/" not in link_url:
-                break
+                continue
             logging.info("2")
             ## 英語ページなら除外
             if "/-/en/" in link_url:
-                break
+                continue
             logging.info("3")
             ## フィルタ製品ページなら除外
             if "フィルタ―" in link_url:
-                break
+                continue
             logging.info("4")
 
             parsed_url = urlparse(link_url).path
