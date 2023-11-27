@@ -17,46 +17,52 @@ def get_url_amazon(get_pos):
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
-        logging.info("data:")
-        logging.info(f"{row['BRAND']} {row['Item']}")
 
         ## メーカー・製品名の抽出
         search_word = f"{row['BRAND']} {row['Item']}"
 
-        ## 価格コム検索
-        ### Googleのトップページを開く
+        ## Amazon検索
+        ### GoogleからAmazonの検索ページを検索する
         driver.get(f"https://www.google.com/search?q=https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}")
-
-        ### 検索ボックスを見つける
-        search_box = driver.find_element(By.NAME, "q")
-
-        ### 検索ワードを入力し、Enterキーを押して検索を実行
-        search_box.send_keys("Amazon" + search_word)
-        search_box.send_keys(Keys.RETURN)
 
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(3)
 
-        ### 最初の検索結果のリンクを取得
-        first_result = driver.find_element(By.CSS_SELECTOR, "h3")
-        first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
+        ### 検索結果のリンクを収集
+        links = driver.find_elements(By.CSS_SELECTOR, "div.MjjYud")
 
-        logging.info("検索URL:")
-        logging.info(first_link)
+        #検索結果を１つずつみて、リンク先のURLを抽出
+        for link in links:
 
-        ### URLリスト用に加工(口コミ・製品情報ともに取得)
-        parsed_url = urlparse(first_link).path
-        urllist_word = parsed_url[6:17].strip("/")
-        search_urllist = f"https://review.kakaku.com/review/{urllist_word}/#tab"
-        search_urllist_product = f"https://kakaku.com/item/{urllist_word}/spec/#tab"
+            logging.info("link:")
+            logging.info(link)
+            ## 製品名を含まないなら除外
+            if row['Item'] not in link:
+                break
+            logging.info("1")
+            ## 製品ページのパスがないなら除外
+            if "/dp/" not in link:
+                break
+            logging.info("2")
+            ## 英語ページなら除外
+            if "/-/en/" in link:
+                break
+            logging.info("3")
+            ## フィルタ製品ページなら除外
+            if "フィルタ―" in link:
+                break
+            logging.info("4")
 
-        logging.info("リストURL:")
-        logging.info(search_urllist)
-        logging.info(search_urllist_product)
+            parsed_url = urlparse(link).path
 
-        #DataFrameに登録
-        columns = ['ID','BRAND','Item','ReviewURL','ProductURL']
-        values = [row['ID'],row['BRAND'],row['Item'],search_urllist,search_urllist_product] 
-        scr.add_df(values,columns)
+            # 検索文字列の位置を見つける
+            pos = parsed_url.find("/dp/")
+
+            asinID = link[pos + len("/dp/"): pos + len("/dp/") + 10]
+
+            #DataFrameに登録
+            columns = ['ID','BRAND','Item','asinID']
+            values = [row['ID'],row['BRAND'],row['Item'],asinID] 
+            scr.add_df(values,columns)
 
     return scr

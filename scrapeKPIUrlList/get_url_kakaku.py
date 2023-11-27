@@ -17,8 +17,6 @@ def get_url_kakaku(get_pos):
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
-        logging.info("data:")
-        logging.info(f"{row['BRAND']} {row['Item']}")
 
         ## メーカー・製品名の抽出
         search_word = f"{row['BRAND']} {row['Item']}"
@@ -40,9 +38,6 @@ def get_url_kakaku(get_pos):
         ### 最初の検索結果のリンクを取得
         first_result = driver.find_element(By.CSS_SELECTOR, "h3")
         first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
-
-        logging.info("検索URL:")
-        logging.info(first_link)
 
         ### URLリスト用に加工(口コミ・製品情報ともに取得)
         parsed_url = urlparse(first_link).path

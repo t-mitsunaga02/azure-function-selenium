@@ -18,8 +18,6 @@ def get_url_yahoo(get_pos):
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
-        logging.info("data:")
-        logging.info(f"{row['BRAND']} {row['Item']}")
 
         ## メーカー・製品名の抽出
         search_word = f"{row['BRAND']} {row['Item']}"
