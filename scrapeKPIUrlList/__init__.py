@@ -2,6 +2,7 @@ import logging
 from .classfile import Scrape
 from .get_pos import get_pos
 from .get_url_kakaku import get_url_kakaku
+from .get_url_rakuten import get_url_rakuten
 
 import azure.functions as func
 import pandas as pd
@@ -15,11 +16,16 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("POS:")
     logging.info(pos_data.head())
 
-    # 2.価格コムURL検索
+    # 2-1.価格コムURL検索
     url_data_kakaku = get_url_kakaku(pos_data)
     logging.info("URLkakaku:")
     logging.info(url_data_kakaku.df)
 
+
+    # 2-3.楽天URL検索
+    url_data_rakuten = get_url_rakuten(pos_data)
+    logging.info("URLrakuten:")
+    logging.info(url_data_rakuten.df)
 
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
     # csv_buffer = io.StringIO()

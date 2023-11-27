@@ -31,7 +31,7 @@ def get_url_kakaku(get_pos):
         search_box = driver.find_element(By.NAME, "q")
 
         ### 検索ワードを入力し、Enterキーを押して検索を実行
-        search_box.send_keys("価格" + search_word)
+        search_box.send_keys("Amazon" + search_word)
         search_box.send_keys(Keys.RETURN)
 
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）

@@ -1,5 +1,7 @@
 
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 #新しいクラス（モジュール）を作る 
 class Scrape():
@@ -11,7 +13,22 @@ class Scrape():
         self.max = max
         self.headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36"}
         self.timeout = 5
- 
+
+    def get_driver():
+        '''
+        ## seleniumにてブラウザ操作するための準備
+        return :
+            Chrome接続情報        
+        '''
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        ## Dockerにあるchromedriverを使用
+        service = Service(executable_path=r"/usr/local/bin/chromedriver")
+        driver = webdriver.Chrome(service=service, options=options)
+        return driver
+
     def to_csv(self,filename,dropcolumns=None):
         '''
         DataFrame をCSVとして出力する
