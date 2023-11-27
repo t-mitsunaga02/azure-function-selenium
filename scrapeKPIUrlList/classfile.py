@@ -26,8 +26,7 @@ class Scrape():
         options.add_argument('--disable-dev-shm-usage')
         ## Dockerにあるchromedriverを使用
         service = Service(executable_path=r"/usr/local/bin/chromedriver")
-        driver = webdriver.Chrome(service=service, options=options)
-        return driver
+        return webdriver.Chrome(service=service, options=options)
 
     def to_csv(self,filename,dropcolumns=None):
         '''
