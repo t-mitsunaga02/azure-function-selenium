@@ -32,19 +32,30 @@ def get_url_amazon(get_pos):
 
         ## asinの初期化
         asin_url = ""
+
         ## 検索結果を１つずつみて、該当の製品ID（asin）を取得するループ
         for link in shop_url:
             ### 製品のタイトルを取得
             link_text = link.find('span', class_='a-size-base-plus a-color-base a-text-normal')
+            
+            logging.info("タイトル:")
+            logging.info(link_text)
+
             if link_text:
+                logging.info("タイトルあり:")
+                logging.info(link_text)
                 ### 検索した製品と同名かどうか
                 if row['Item'] not in link_text.text: 
                     continue
                 ### フィルタ製品じゃないかどうか
                 if "フィルタ" in link_text.text:
                     continue
+
                 ### 製品ページのURLからasinIDを取得
                 asin_url = link.get('href')
+                logging.info("asin取得:")
+                logging.info(asin_url)
+
                 match = re.search(r'/dp/(\w{10})', asin_url)
                 asin_string = match.group(1)
                 print(asin_string)
