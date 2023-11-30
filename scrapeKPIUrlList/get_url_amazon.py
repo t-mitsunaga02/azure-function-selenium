@@ -30,6 +30,8 @@ def get_url_amazon(get_pos):
         ## 製品ページのタグを取得
         shop_url = soup.find_all('a',class_='a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal')
 
+        ## asinの初期化
+        asin_url = ""
         ## 検索結果を１つずつみて、該当の製品ID（asin）を取得するループ
         for link in shop_url:
             ### 製品のタイトルを取得
@@ -61,6 +63,9 @@ def get_url_amazon(get_pos):
 
         ## 色・スタイルの切り替えのためリンクを取得
         li_elements = driver.find_elements(By.CSS_SELECTOR, "li[data-csa-c-content-id='twister-desktop-configurator-swatch-swatchAvailable']")
+
+        logging.info("asin_url:")
+        logging.info(asin_url)
 
         ## 色・スタイルのリンク分ループ
         for li in li_elements:
