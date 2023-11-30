@@ -11,9 +11,6 @@ def get_url_amazon(get_pos):
     scr = Scrape(wait=2,max=5)
 
     # 2.各サイトURL検索
-    ## seleniumにてブラウザ操作するための準備
-    driver = scr.get_driver()
-
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
 
@@ -51,8 +48,8 @@ def get_url_amazon(get_pos):
                 print(asin_string)
 
                 #DataFrameに登録
-                columns = ['BRAND','Item','asinID']
-                values = [row['BRAND'],row['Item'],asin_string] 
+                columns = ['ID','BRAND','Item','asinID']
+                values = [row['ID'],row['BRAND'],row['Item'],asin_string] 
                 scr.add_df(values,columns)
 
             else:
@@ -92,8 +89,8 @@ def get_url_amazon(get_pos):
             print(f"mojiretu:{asin_string}")
 
             #DataFrameに登録
-            columns = ['BRAND','Item','asinID']
-            values = [row['BRAND'],row['Item'],asin_string] 
+            columns = ['ID','BRAND','Item','asinID']
+            values = [row['ID'],row['BRAND'],row['Item'],asin_string] 
             scr.add_df(values,columns)
             scr.df.drop_duplicates()
         driver.quit()
