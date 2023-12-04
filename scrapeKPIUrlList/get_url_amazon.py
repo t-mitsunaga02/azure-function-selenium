@@ -21,6 +21,7 @@ def get_url_amazon(get_pos):
         ## Amazonの検索ページを表示する
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
 
+        logging.info(f"URL:{target}")
         scr = Scrape(wait=2,max=5)
         soup = scr.request(target)
 
@@ -33,17 +34,15 @@ def get_url_amazon(get_pos):
         ## asinの初期化
         asin_url = ""
 
-        logging.info(f"タイトルあり:{shop_url}")
+        # logging.info(f"タイトルあり:{shop_url}")
 
         ## 検索結果を１つずつみて、該当の製品ID（asin）を取得するループ
         for link in shop_url:
             ### 製品のタイトルを取得
             link_text = link.find('span', class_='a-size-base-plus a-color-base a-text-normal')
-            
-            logging.info(f"タイトル:{link_text.text}")
 
             if link_text:
-                logging.info("タイトルあり")
+                logging.info(f"タイトル:{link_text.text}")
                 ### 検索した製品と同名かどうか
                 if row['Item'] not in link_text.text: 
                     continue
