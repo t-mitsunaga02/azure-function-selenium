@@ -22,9 +22,10 @@ def get_url_amazon(get_pos):
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
 
         logging.info(f"URL:{target}")
-        scr = Scrape(wait=2,max=5)
         soup = scr.request(target)
 
+        if not soup:
+            logging.info(f"リクエスト出来ず")
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(3)
 
