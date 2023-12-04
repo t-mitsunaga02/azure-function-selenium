@@ -31,6 +31,7 @@ def get_url_amazon(get_pos):
         ## 製品ページのタグを取得
         shop_url = soup.find_all('a',class_='a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal')
 
+        logging.info(f"タイトル件数:{len(shop_url)}")
         ## asinの初期化
         asin_url = ""
 
