@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 def get_url_amazon(get_pos):
     # クラスファイルの呼び出し
-    scr = Scrape(wait=2,max=5)
+    scr = Scrape(wait=5,max=5)
 
     # 2.各サイトURL検索
     ## メーカー・製品毎にサイト検索するループ
@@ -21,11 +21,10 @@ def get_url_amazon(get_pos):
         ## Amazonの検索ページを表示する
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
         logging.info(f"製品開始：{target}")
-        scr = Scrape(wait=3,max=5)
         soup = scr.request(target)
 
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
-        time.sleep(8)
+        # time.sleep(8)
 
         ## 製品ページのタグを取得
         shop_url = soup.find_all('a',class_='a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal')
@@ -60,7 +59,7 @@ def get_url_amazon(get_pos):
                 ### 色/スタイルなどの違いがある製品を取得
                 color_target = f"https://www.amazon.co.jp{asin_url}"
                 color_soup = scr.request(color_target)
-                time.sleep(5)
+                # time.sleep(5)
 
                 ### エレメントが3種類切り替わるため
                 color_url_1 = color_soup.find_all('ul', class_='a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-horizontal a-spacing-top-micro swatches swatchesSquare')
@@ -88,7 +87,7 @@ def get_url_amazon(get_pos):
                         re_asin_url = re.sub(r'/dp/(\w{10})', replace_asin, color_target)
                         print(re_asin_url)
                         re_asin_soup = scr.request(re_asin_url)
-                        time.sleep(3)
+                        # time.sleep(5)
 
                         re_asin_text = re_asin_soup.find('span', class_='a-size-large product-title-word-break')
 
@@ -113,4 +112,4 @@ def get_url_amazon(get_pos):
             
             else:
                 continue
-    return scr.df
+    return scr

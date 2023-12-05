@@ -26,7 +26,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # 2-2.AmazonURL検索
     url_data_amazon = get_url_amazon(pos_data)
     logging.info("URLamazon:")
-    logging.info(url_data_amazon.head())
+    logging.info(url_data_amazon.df.head())
 
     # # 2-3.楽天URL検索
     # url_data_rakuten = get_url_rakuten(pos_data)
