@@ -21,92 +21,87 @@ def get_url_amazon(get_pos):
         ## Amazonの検索ページを表示する
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
 
-        logging.info(f"URL:{target}")
+        scr = Scrape(wait=3,max=5)
         soup = scr.request(target)
 
-        if not soup:
-            logging.info(f"リクエスト出来ず")
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(3)
 
         ## 製品ページのタグを取得
         shop_url = soup.find_all('a',class_='a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal')
 
-        logging.info(f"タイトル件数:{len(shop_url)}")
-        ## asinの初期化
-        asin_url = ""
-
-        # logging.info(f"タイトルあり:{shop_url}")
-
         ## 検索結果を１つずつみて、該当の製品ID（asin）を取得するループ
         for link in shop_url:
             ### 製品のタイトルを取得
             link_text = link.find('span', class_='a-size-base-plus a-color-base a-text-normal')
-
             if link_text:
-                logging.info(f"タイトル:{link_text.text}")
                 ### 検索した製品と同名かどうか
                 if row['Item'] not in link_text.text: 
                     continue
                 ### フィルタ製品じゃないかどうか
                 if "フィルタ" in link_text.text:
                     continue
-
                 ### 製品ページのURLからasinIDを取得
                 asin_url = link.get('href')
-                logging.info(f"asin取得:{asin_url}")
-
                 match = re.search(r'/dp/(\w{10})', asin_url)
                 asin_string = match.group(1)
-                print(asin_string)
+                print(f"製品ID：{asin_string}")
 
-                #DataFrameに登録
+                ### DataFrameに登録
                 columns = ['ID','BRAND','Item','asinID']
-                values = [row['ID'],row['BRAND'],row['Item'],asin_string] 
+                values = [row['ID'],row['BRAND'],row['Item'],asin_string]  
                 scr.add_df(values,columns)
 
+                ### 色/スタイルなどの違いがある製品を取得
+                color_target = f"https://www.amazon.co.jp{asin_url}"
+                color_soup = scr.request(color_target)
+                time.sleep(3)
+
+                ### エレメントが3種類切り替わるため
+                color_url_1 = color_soup.find_all('ul', class_='a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-horizontal a-spacing-top-micro swatches swatchesSquare')
+                color_url_2 = color_soup.find_all('ul', class_='a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-horizontal dimension-values-list')
+                color_url_3 = color_soup.find_all('ul', class_='a-unordered-list a-nostyle a-button-list a-declarative a-button-toggle-group a-horizontal a-spacing-top-micro swatches swatchesSquare imageSwatches')
+
+                color_url = color_url_1 + color_url_2 + color_url_3
+
+                ### 色違い製品がない場合はループを抜ける
+                if not color_url :
+                    continue
+
+                print(f"数:{len(color_url)}")
+                ### リンク切り替えループ
+                for urls in color_url:
+                    ### asinID取得
+                    pattern = r"data-csa-c-item-id=.{1}(.{10})"
+                    hits = re.findall(pattern, str(urls))
+                    ### asinID毎に遷移するループ
+                    for asin in hits:
+                        print(asin)
+                        ### asinIDを置換し遷移する
+                        replace_asin = f"/dp/{asin}"
+                        re_asin_url = re.sub(r'/dp/(\w{10})', replace_asin, color_target)
+                        print(re_asin_url)
+                        re_asin_soup = scr.request(re_asin_url)
+                        time.sleep(3)
+
+                        re_asin_text = re_asin_soup.find('span', class_='a-size-large product-title-word-break')
+
+                        # print(re_asin_text.text)
+                        if re_asin_text:
+                            ### 検索した製品と同名かどうか
+                            if row['Item'] not in re_asin_text.text: 
+                                continue
+                            ### フィルタ製品じゃないかどうか
+                            if "フィルタ" in re_asin_text.text:
+                                continue
+                            ### DataFrameに登録
+                            columns = ['ID','BRAND','Item','asinID']
+                            values = [row['ID'],row['BRAND'],row['Item'],asin] 
+                            scr.add_df(values,columns)
+                            scr.df.drop_duplicates()
+                        else:
+                            continue
+            
             else:
                 continue
-
-        ## 製品ページへ遷移
-        driver = scr.get_driver()
-        driver.get(f"https://www.amazon.co.jp{asin_url}")
-
-        ## 色・スタイルの切り替えのためリンクを取得
-        li_elements = driver.find_elements(By.CSS_SELECTOR, "li[data-csa-c-content-id='twister-desktop-configurator-swatch-swatchAvailable']")
-
-        logging.info(f"asin_url:{asin_url}")
-
-        ## 色・スタイルのリンク分ループ
-        for li in li_elements:
-            ### リンクの押下
-            submit_button = li.find_element(By.CSS_SELECTOR, "input[type='submit']")
-            submit_button.click()
-
-            ### 新しいページがロードされるのを待機
-            time.sleep(3)
-
-            ### 切り替え後の製品タイトル取得
-            color_text = driver.find_element(By.CSS_SELECTOR, "span.a-size-large.product-title-word-break")
-            print(f"color:{color_text.text}")
-
-            ### 切り替え後のタイトルが検索した製品と同名かどうか
-            if row['Item'] not in color_text.text: 
-                continue
-            ### 切り替え後のタイトルがフィルタ製品じゃないかどうか
-            if "フィルタ" in color_text.text:
-                continue
-
-            ### 製品ページのURLからasinIDを取得
-            match = re.search(r'/dp/(\w{10})', driver.current_url)
-            asin_string = match.group(1)
-
-            print(f"mojiretu:{asin_string}")
-
-            #DataFrameに登録
-            columns = ['ID','BRAND','Item','asinID']
-            values = [row['ID'],row['BRAND'],row['Item'],asin_string] 
-            scr.add_df(values,columns)
-            scr.df.drop_duplicates()
-        driver.quit()
     return scr
