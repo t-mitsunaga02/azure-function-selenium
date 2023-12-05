@@ -1,5 +1,4 @@
 import logging
-from .classfile import Scrape
 from .get_pos import get_pos
 from .get_url_kakaku import get_url_kakaku
 from .get_url_amazon import get_url_amazon
@@ -10,8 +9,6 @@ import azure.functions as func
 import pandas as pd
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    # クラスファイルの呼び出し
-    scr = Scrape(wait=2,max=5)
 
     # 1.POSデータの読み込み
     pos_data = get_pos()
