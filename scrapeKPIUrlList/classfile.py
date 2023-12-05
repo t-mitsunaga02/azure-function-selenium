@@ -9,6 +9,7 @@ import random
 import datetime
 import time
 import pandas as pd
+import unicodedata
 
 #新しいクラス（モジュール）を作る 
 class Scrape():
@@ -153,3 +154,15 @@ class Scrape():
                             columns[n] = f'{column}_{cnt}'
                         cnt += 1
         return columns
+    
+    def normalize_string(self,input_str):
+        # 文字列を小文字に変換
+        lower_str = input_str.lower()
+        
+        # 全角文字を半角文字に変換
+        half_width_str = unicodedata.normalize('NFKC', lower_str)
+        
+        # スペースを削除
+        no_space_str = half_width_str.replace(" ", "")
+        
+        return no_space_str

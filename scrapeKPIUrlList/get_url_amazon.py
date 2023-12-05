@@ -35,14 +35,14 @@ def get_url_amazon(get_pos):
             ### 製品のタイトルを取得
             link_text = link.find('span', class_='a-size-base-plus a-color-base a-text-normal')
             if link_text:
-                logging.info(f"製品名：{row['Item']}")
+                logging.info(f"製品名：{scr.normalize_string(row['Item'])}")
                 ### 検索した製品と同名かどうか
-                if row['Item'] not in link_text.text: 
+                if scr.normalize_string(row['Item']) not in scr.normalize_string(link_text.text): 
                     continue
                 ### フィルタ製品じゃないかどうか
                 if "フィルタ" in link_text.text:
                     continue
-                logging.info(f"製品タイトル：{link_text.text}")
+                logging.info(f"製品タイトル：{scr.normalize_string(link_text.text)}")
                 ### 製品ページのURLからasinIDを取得
                 asin_url = link.get('href')
                 match = re.search(r'/dp/(\w{10})', asin_url)
@@ -94,8 +94,8 @@ def get_url_amazon(get_pos):
                         # print(re_asin_text.text)
                         if re_asin_text:
                             ### 検索した製品と同名かどうか
-                            logging.info(f"色違いタイトル：{re_asin_text.text}")
-                            if row['Item'] not in re_asin_text.text: 
+                            logging.info(f"色違いタイトル：{scr.normalize_string(re_asin_text.text)}")
+                            if scr.normalize_string(row['Item']) not in scr.normalize_string(re_asin_text.text): 
                                 continue
                             ### フィルタ製品じゃないかどうか
                             if "フィルタ" in re_asin_text.text:
