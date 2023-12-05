@@ -1,10 +1,6 @@
 import logging
 from .classfile import Scrape
 
-from selenium.webdriver.common.by import By
-from azure.storage.blob import BlobServiceClient
-import io
-import os
 import time
 import re
 from urllib.parse import urlparse
@@ -25,23 +21,9 @@ def get_url_amazon(get_pos):
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
         logging.info(f"製品開始：{target}")
         backup = scr.request_back(target)
-
-        csv_buffer = io.StringIO()
-        backup(csv_buffer, encoding='utf_8', index=False)
-
-        logging.info(backup)
-
-        # BLOBへの接続
-        connect_str = os.getenv("AzureWebJobsStorage")
-        
-        # Create a blob client using the local file name as the name for the blob
-        blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-        blob_name_out = f"{row['Item']}.html"
+        logging.info(f"HTML：{backup}")
 
 
-        # Blobへのアップロード
-        blob_client = blob_service_client.get_blob_client("scrapefile", blob=blob_name_out)
-        blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)
 
 
 
