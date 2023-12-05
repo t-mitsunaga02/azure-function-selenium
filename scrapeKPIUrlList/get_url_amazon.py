@@ -35,6 +35,7 @@ def get_url_amazon(get_pos):
             ### 製品のタイトルを取得
             link_text = link.find('span', class_='a-size-base-plus a-color-base a-text-normal')
             if link_text:
+                logging.info(f"製品タイトル：{link_text.text}")
                 ### 検索した製品と同名かどうか
                 if row['Item'] not in link_text.text: 
                     continue
@@ -46,6 +47,7 @@ def get_url_amazon(get_pos):
                 match = re.search(r'/dp/(\w{10})', asin_url)
                 asin_string = match.group(1)
                 print(f"製品ID：{asin_string}")
+                logging.info(f"製品ID：{asin_string}")
 
                 ### DataFrameに登録
                 columns = ['ID','BRAND','Item','asinID']
@@ -76,6 +78,7 @@ def get_url_amazon(get_pos):
                     hits = re.findall(pattern, str(urls))
                     ### asinID毎に遷移するループ
                     for asin in hits:
+                        logging.info(f"色違い製品asin：{asin}")
                         print(asin)
                         ### asinIDを置換し遷移する
                         replace_asin = f"/dp/{asin}"
@@ -89,12 +92,14 @@ def get_url_amazon(get_pos):
                         # print(re_asin_text.text)
                         if re_asin_text:
                             ### 検索した製品と同名かどうか
+                            logging.info(f"色違いタイトル：{re_asin_text.text}")
                             if row['Item'] not in re_asin_text.text: 
                                 continue
                             ### フィルタ製品じゃないかどうか
                             if "フィルタ" in re_asin_text.text:
                                 continue
                             ### DataFrameに登録
+                            logging.info(f"色違いasin：{asin}")
                             columns = ['ID','BRAND','Item','asinID']
                             values = [row['ID'],row['BRAND'],row['Item'],asin] 
                             scr.add_df(values,columns)
