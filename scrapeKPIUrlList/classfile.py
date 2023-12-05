@@ -72,6 +72,40 @@ class Scrape():
 
         return BeautifulSoup(response.content, "html.parser")
 
+    def request_back(self,url,wait=None,max=None,console=True):
+        '''
+        指定したURLからページを取得する。
+        取得後にwaitで指定された秒数だけ待機する。
+        max が指定された場合、waitが最小値、maxが最大値の間でランダムに待機する。
+
+        Params
+        ---------------------
+        url:str
+            URL
+        wait:int
+            ウェイト秒
+        max:int
+            ウェイト秒の最大値
+        console:bool
+            状況をコンソール出力するか
+        Returns
+        ---------------------
+        soup:BeautifulSoupの戻り値
+        '''
+        self.wait = self.wait if wait is None else wait
+        self.max = self.max if max is None else max
+
+        start = time.time()
+        response = requests.get(url,headers=self.headers,timeout = self.timeout)
+        time.sleep(random.randint(self.wait,self.wait if self.max is None else self.max))
+
+        if console:
+            tm = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            lap = time.time() - start
+            print(f'{tm} : {url}  経過時間 : {lap:.3f} 秒')
+
+        return response.content
+
     def to_csv(self,filename,dropcolumns=None):
         '''
         DataFrame をCSVとして出力する
