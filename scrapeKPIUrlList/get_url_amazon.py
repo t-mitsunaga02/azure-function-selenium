@@ -35,13 +35,14 @@ def get_url_amazon(get_pos):
             ### 製品のタイトルを取得
             link_text = link.find('span', class_='a-size-base-plus a-color-base a-text-normal')
             if link_text:
-                logging.info(f"製品タイトル：{link_text.text}")
+                logging.info(f"製品名：{row['Item']}")
                 ### 検索した製品と同名かどうか
                 if row['Item'] not in link_text.text: 
                     continue
                 ### フィルタ製品じゃないかどうか
                 if "フィルタ" in link_text.text:
                     continue
+                logging.info(f"製品タイトル：{link_text.text}")
                 ### 製品ページのURLからasinIDを取得
                 asin_url = link.get('href')
                 match = re.search(r'/dp/(\w{10})', asin_url)
@@ -53,6 +54,7 @@ def get_url_amazon(get_pos):
                 columns = ['ID','BRAND','Item','asinID']
                 values = [row['ID'],row['BRAND'],row['Item'],asin_string]  
                 scr.add_df(values,columns)
+                logging.info(scr.df.head())
 
                 ### 色/スタイルなどの違いがある製品を取得
                 color_target = f"https://www.amazon.co.jp{asin_url}"
@@ -66,11 +68,11 @@ def get_url_amazon(get_pos):
 
                 color_url = color_url_1 + color_url_2 + color_url_3
 
+                print(f"数:{len(color_url)}")
                 ### 色違い製品がない場合はループを抜ける
                 if not color_url :
                     continue
 
-                print(f"数:{len(color_url)}")
                 ### リンク切り替えループ
                 for urls in color_url:
                     ### asinID取得
@@ -109,4 +111,4 @@ def get_url_amazon(get_pos):
             
             else:
                 continue
-    return scr
+    return scr.df
