@@ -25,10 +25,11 @@ def get_url_amazon(get_pos):
         soup = scr.request(target)
 
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
-        time.sleep(3)
+        time.sleep(5)
 
         ## 製品ページのタグを取得
         shop_url = soup.find_all('a',class_='a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal')
+        logging.info(f"製品タイトル数：{len(shop_url)}")
 
         ## 検索結果を１つずつみて、該当の製品ID（asin）を取得するループ
         for link in shop_url:
