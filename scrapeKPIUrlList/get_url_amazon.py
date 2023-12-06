@@ -1,6 +1,5 @@
 import logging
 from .classfile import Scrape
-from requests_html import HTMLSession
 
 import time
 import re
