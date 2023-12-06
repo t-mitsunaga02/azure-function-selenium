@@ -20,6 +20,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("URLkakaku:")
     logging.info(url_data_kakaku.df)
 
+    # 3-1.価格コムスクレイピング
+    url_data_kakaku = get_scrape_amazon(url_data_kakaku.df)
+    logging.info("URLkakaku:")
+    logging.info(url_data_kakaku.df)
+
     # 2-2.AmazonURL検索
     # url_data_amazon = get_url_amazon(pos_data)
     # logging.info("URLamazon:")
