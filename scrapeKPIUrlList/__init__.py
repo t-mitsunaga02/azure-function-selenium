@@ -15,15 +15,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("POS:")
     logging.info(pos_data.head())
 
-    # # 2-1.価格コムURL検索
-    # url_data_kakaku = get_url_kakaku(pos_data)
-    # logging.info("URLkakaku:")
-    # logging.info(url_data_kakaku.df)
+    # 2-1.価格コムURL検索
+    url_data_kakaku = get_url_kakaku(pos_data)
+    logging.info("URLkakaku:")
+    logging.info(url_data_kakaku.df)
 
     # 2-2.AmazonURL検索
-    url_data_amazon = get_url_amazon(pos_data)
-    logging.info("URLamazon:")
-    logging.info(url_data_amazon.df.head())
+    # url_data_amazon = get_url_amazon(pos_data)
+    # logging.info("URLamazon:")
+    # logging.info(url_data_amazon.df.head())
 
     # # 2-3.楽天URL検索
     # url_data_rakuten = get_url_rakuten(pos_data)
