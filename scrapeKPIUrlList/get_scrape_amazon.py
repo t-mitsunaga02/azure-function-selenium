@@ -8,7 +8,7 @@ import pandas as pd
 from urllib.parse import urlparse
 
 #スクレイピングの関数を定義する
-def get_scrape_kakaku(url):
+def get_scrape_amazon(url):
     scr = Scrape(wait=2,max=5)
  
     #レビューのURLから商品IDの手前までを取り出す

@@ -4,6 +4,7 @@ from .get_url_kakaku import get_url_kakaku
 from .get_url_amazon import get_url_amazon
 from .get_url_rakuten import get_url_rakuten
 from .get_url_yahoo import get_url_yahoo
+from .get_scrape_kakaku import get_scrape_kakaku
 
 import azure.functions as func
 import pandas as pd
@@ -21,8 +22,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(url_data_kakaku.df)
 
     # 3-1.価格コムスクレイピング
-    url_data_kakaku = get_scrape_amazon(url_data_kakaku.df)
-    logging.info("URLkakaku:")
+    url_data_kakaku = get_scrape_kakaku(url_data_kakaku.df)
+    logging.info("scrapekakaku:")
     logging.info(url_data_kakaku.df)
 
     # 2-2.AmazonURL検索
