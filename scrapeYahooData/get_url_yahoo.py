@@ -28,7 +28,7 @@ def get_url_yahoo(get_pos):
 
         logging.info(f"Itemget：{row['Item']}")
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）
-        time.sleep(3)
+        time.sleep(5)
 
         ### 検索結果のリンクを収集
         links = driver.find_elements(By.CSS_SELECTOR, "div.MjjYud")
