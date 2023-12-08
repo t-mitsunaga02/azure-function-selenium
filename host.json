@@ -1,8 +1,11 @@
 {
   "version": "2.0",
-  "functionTimeout": "01:00:00",
+  "functionTimeout": "00:00:10",
   "extensionBundle": {
     "id": "Microsoft.Azure.Functions.ExtensionBundle",
     "version": "[2.*, 3.0.0)"
+  },
+  "extensions": {
+    "maxRetry": -1
   }
 }
