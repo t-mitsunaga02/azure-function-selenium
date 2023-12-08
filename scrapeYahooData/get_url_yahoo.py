@@ -33,6 +33,7 @@ def get_url_yahoo(get_pos):
 
         ### 検索結果のリンクを収集
         links = driver.find_elements(By.CSS_SELECTOR, 'div.MjjYud')
+        logging.info(f"リンク数：{len(links)}")
 
         #検索結果を１つずつみて、リンク先のドメインがyahooショッピングのproductsカテゴリのページかどうか判定
         for link in links:
