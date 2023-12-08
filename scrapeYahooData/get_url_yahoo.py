@@ -13,11 +13,12 @@ def get_url_yahoo(get_pos):
     scr = Scrape(wait=2,max=5)
 
     # 2.各サイトURL検索
-    ## seleniumにてブラウザ操作するための準備
-    driver = scr.get_driver()
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
+
+        ## seleniumにてブラウザ操作するための準備
+        driver = scr.get_driver()
 
         ## メーカー・製品名の抽出
         search_word = f"{row['BRAND']} {row['Item']}"
