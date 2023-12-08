@@ -25,6 +25,7 @@ def get_scrape_yahoo(url_data):
         driver = scr.get_driver()
         driver.get(row['ReviewURL'])
         print(row['ReviewURL'])
+        logging.info(f"product：{row['Item']}")
 
         #レビューボタンクリック
         review_button = driver.find_element(By.XPATH, '//button[@data-cl-params="_cl_link:review;_cl_position:0;"]')

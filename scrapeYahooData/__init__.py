@@ -34,10 +34,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     print(scrape_data_yahoo.df.head())
 
     # 4.CSVファイルに口コミを出力
-    scrape_data_yahoo.df.to_csv("./scrape_file_yahoo.csv", index=False)
-
-
-
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
     csv_buffer = io.StringIO()
     scrape_data_yahoo.df.to_csv(csv_buffer, encoding='utf_8', index=False)

@@ -41,6 +41,7 @@ def get_url_yahoo(get_pos):
                 if domain == "https://shopping.yahoo.co.jp › products":
                     target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
                     print(target_url)
+                    logging.info(f"URLget：{target_url}")
 
                     #DataFrameに登録
                     columns = ['ID','BRAND','Item','ReviewURL']
