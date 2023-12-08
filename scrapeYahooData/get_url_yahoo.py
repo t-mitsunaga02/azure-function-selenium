@@ -35,18 +35,19 @@ def get_url_yahoo(get_pos):
 
         #検索結果を１つずつみて、リンク先のドメインがyahooショッピングのproductsカテゴリのページかどうか判定
         for link in links:
-                try:
-                    domain = link.find_element(By.CSS_SELECTOR,'cite.qLRx3b.tjvcx.GvPZzd.cHaqb').text
-                except NoSuchElementException:
-                    domain = ""
-                if domain == "https://shopping.yahoo.co.jp › products":
-                    target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
-                    print(target_url)
-                    logging.info(f"URLget：{target_url}")
+            logging.info(f"リンク有：{link}")
+            try:
+                domain = link.find_element(By.CSS_SELECTOR,'cite.qLRx3b.tjvcx.GvPZzd.cHaqb').text
+            except NoSuchElementException:
+                domain = ""
+            if domain == "https://shopping.yahoo.co.jp › products":
+                target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
+                print(target_url)
+                logging.info(f"URLget：{target_url}")
 
-                    #DataFrameに登録
-                    columns = ['ID','BRAND','Item','ReviewURL']
-                    values = [row['ID'],row['BRAND'],row['Item'],target_url] 
-                    scr.add_df(values,columns)
-                    break
+                #DataFrameに登録
+                columns = ['ID','BRAND','Item','ReviewURL']
+                values = [row['ID'],row['BRAND'],row['Item'],target_url] 
+                scr.add_df(values,columns)
+                break
     return scr
