@@ -1,10 +1,6 @@
 import logging
 from .classfile import Scrape
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import time
-import pandas as pd
 from urllib.parse import urlparse
 
 #スクレイピングの関数を定義する
