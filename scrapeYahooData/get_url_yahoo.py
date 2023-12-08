@@ -50,4 +50,6 @@ def get_url_yahoo(get_pos):
                 values = [row['ID'],row['BRAND'],row['Item'],target_url] 
                 scr.add_df(values,columns)
                 break
+    # webdriverの終了
+    driver.quit()
     return scr
