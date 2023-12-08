@@ -23,22 +23,22 @@ def get_url_yahoo(get_pos):
         ## メーカー・製品名の抽出
         search_word = f"{row['BRAND']} {row['Item']}"
 
+        logging.info(f"処理スタート：{row['Item']}")
         ## Yahoo検索
         ### Googleのトップページを開く
         driver.get(f"https://www.google.com/search?q=https%3A%2F%2Fshopping.yahoo.co.jp+%E2%80%BA+products+{row['BRAND']}+{row['Item']}")
 
-        logging.info(f"ドライバ：{driver.current_url}")
-        logging.info(f"Itemget：{row['Item']}")
+        logging.info(f"遷移URL：{driver.current_url}")
+
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(5)
 
         ### 検索結果のリンクを収集
         links = driver.find_elements(By.CSS_SELECTOR, 'div.MjjYud')
-        logging.info(f"リンク数：{len(links)}")
+        logging.info(f"検索結果リンク数：{len(links)}")
 
         #検索結果を１つずつみて、リンク先のドメインがyahooショッピングのproductsカテゴリのページかどうか判定
         for link in links:
-            logging.info(f"リンク有：{link}")
             try:
                 domain = link.find_element(By.CSS_SELECTOR,'cite.qLRx3b.tjvcx.GvPZzd.cHaqb').text
             except NoSuchElementException:
@@ -46,7 +46,7 @@ def get_url_yahoo(get_pos):
             if domain == "https://shopping.yahoo.co.jp › products":
                 target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
                 print(target_url)
-                logging.info(f"URLget：{target_url}")
+                logging.info(f"該当URL：{target_url}")
 
                 #DataFrameに登録
                 columns = ['ID','BRAND','Item','ReviewURL']
