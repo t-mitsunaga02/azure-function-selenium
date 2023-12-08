@@ -1,5 +1,5 @@
 import logging
-from .ClassFile import Scrape
+from .class_file import Scrape
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -31,7 +31,7 @@ def get_url_yahoo(get_pos):
         time.sleep(5)
 
         ### 検索結果のリンクを収集
-        links = driver.find_elements(By.CSS_SELECTOR, "div.MjjYud")
+        links = driver.find_elements(By.CSS_SELECTOR, 'div.MjjYud')
 
         #検索結果を１つずつみて、リンク先のドメインがyahooショッピングのproductsカテゴリのページかどうか判定
         for link in links:

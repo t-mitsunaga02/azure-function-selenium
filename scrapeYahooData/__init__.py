@@ -1,5 +1,5 @@
 import logging
-from .ClassFile import Scrape
+from .class_file import Scrape
 from .get_pos import get_pos
 from .get_url_yahoo import get_url_yahoo
 from .get_scrape_yahoo import get_scrape_yahoo

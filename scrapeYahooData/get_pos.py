@@ -1,5 +1,5 @@
 import logging
-from .ClassFile import Scrape
+from .class_file import Scrape
 
 from azure.storage.blob import BlobServiceClient
 import pandas as pd
