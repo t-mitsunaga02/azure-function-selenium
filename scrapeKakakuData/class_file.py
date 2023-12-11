@@ -188,7 +188,24 @@ class Scrape():
                             columns[n] = f'{column}_{cnt}'
                         cnt += 1
         return columns
-    
+
+    def get_text(self,soup):
+        '''
+        渡された soup が Noneでなければ textプロパティの値を返す
+
+        Params
+        ---------------------
+        soup: bs4.element.Tag
+            bs4でfindした結果の戻り値
+
+        Returns
+        ---------------------
+        return :str
+            textプロパティに格納されている文字列
+        '''
+
+        return ' ' if soup == None else soup.text
+
     def normalize_string(self,input_str):
         # 文字列を小文字に変換
         lower_str = input_str.lower()
