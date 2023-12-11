@@ -1,8 +1,8 @@
 import logging
-from class_file import Scrape
-from get_pos import get_pos
-from get_url_amazon import get_url_amazon
-from get_scrape_amazon import get_scrape_amazon
+from .class_file import Scrape
+from .get_pos import get_pos
+from .get_url_amazon import get_url_amazon
+from .get_scrape_amazon import get_scrape_amazon
 
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient

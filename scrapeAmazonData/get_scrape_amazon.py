@@ -1,4 +1,4 @@
-from class_file import Scrape
+from .class_file import Scrape
 import time
 
 def get_scrape_amazon(url_data):

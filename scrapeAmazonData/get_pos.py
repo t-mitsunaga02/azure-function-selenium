@@ -1,5 +1,5 @@
 import logging
-from class_file import Scrape
+from .class_file import Scrape
 
 import pandas as pd
 import io
