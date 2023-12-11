@@ -3,6 +3,7 @@ from .class_file import Scrape
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
 import pandas as pd
 from urllib.parse import urlparse
@@ -43,6 +44,13 @@ def get_url_amazon(get_pos):
             title_element = product.find_element(By.CSS_SELECTOR, 'span.a-size-base-plus.a-color-base.a-text-normal')
             title_text = title_element.text
 
+            # 製品の値段を取得（LEVOITのフィルタ商品を除外するため）
+            try:
+                money_element = product.find_element(By.CSS_SELECTOR, 'span.a-price-whole')
+                money_text = int(money_element.text.replace(',',''))
+            except NoSuchElementException:
+                money_element = ""
+
             # 指定された製品名がタイトルに含まれているかチェック
             if scr.normalize_string(row['Item']) not in scr.normalize_string(title_text):
                 continue
@@ -51,6 +59,11 @@ def get_url_amazon(get_pos):
                 ### フィルタ製品じゃないかどうか
                 if "フィルタ" in title_text:
                     continue
+            else:
+                ### LEVOITの場合は値段でフィルタ判断
+                if money_text <= 5000:
+                    continue
+
             print(f"タイトル：{title_text}")
             asin = product.get_attribute("data-asin")
             print(asin)
