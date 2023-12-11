@@ -1,3 +1,4 @@
+import logging
 from .class_file import Scrape
 import time
 
@@ -15,6 +16,7 @@ def get_scrape_amazon(url_data):
             #商品IDからレビュー記事のページを生成
             target = f"https://www.amazon.co.jp/product-reviews/{row['asinID']}/ref=cm_cr_arp_d_viewopt_sr?ie=UTF8&filterByStar=all_stars&reviewerType=all_reviews&formatType=current_format&pageNumber={n}#reviews-filter-bar"
             #print(f'get：{target}')
+            logging.info(f'get：{target}')
 
             #ページを読み込む
             soup = scr.request(target)
@@ -25,6 +27,7 @@ def get_scrape_amazon(url_data):
             reviews = soup.find_all('div',class_='a-section review aok-relative')
             print(f'ページ数:{n}')
             print(f'レビュー数:{len(reviews)}')
+            logging.info(f'レビュー数:{len(reviews)}')
 
             #レビューの数だけループ
             for review in reviews:
