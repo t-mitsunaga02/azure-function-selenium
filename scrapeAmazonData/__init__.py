@@ -1,8 +1,8 @@
 import logging
-from .class_file import Scrape
-from .get_pos import get_pos
-from .get_url_yahoo import get_url_yahoo
-from .get_scrape_yahoo import get_scrape_yahoo
+from class_file import Scrape
+from get_pos import get_pos
+from get_url_amazon import get_url_amazon
+from get_scrape_amazon import get_scrape_amazon
 
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient
@@ -11,7 +11,6 @@ import io
 import os
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
 
@@ -21,29 +20,33 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(pos_data.head())
     print(pos_data.head())
 
-    # 2.YahooURL検索
-    url_data_yahoo = get_url_yahoo(pos_data)
-    logging.info("URLyahoo:")
-    logging.info(url_data_yahoo.df)
-    print(url_data_yahoo.df.head())
+    # 2.AmazonURL検索
+    url_data_amazon = get_url_amazon(pos_data)
+    logging.info("URLamazon:")
+    logging.info(url_data_amazon.df.head())
+    print(url_data_amazon.df)
 
-    # 3.Yahooスクレイピング
-    scrape_data_yahoo = get_scrape_yahoo(url_data_yahoo.df)
-    logging.info("scrapeyahoo:")
-    logging.info(scrape_data_yahoo.df)
-    print(scrape_data_yahoo.df.head())
+    # 3.Amazonスクレイピング
+    scrape_data_amazon = get_scrape_amazon(url_data_amazon.df)
+    logging.info("scrapeamazon:")
+    logging.info(scrape_data_amazon.df)
+    print(scrape_data_amazon.df.head())
+
+    # 4.CSVファイルに口コミを出力
+    scrape_data_amazon.df.to_csv("./scrape_file_amazon.csv", index=False)
+
 
     # 4.CSVファイルに口コミを出力
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
     csv_buffer = io.StringIO()
-    scrape_data_yahoo.df.to_csv(csv_buffer, encoding='utf_8', index=False)
+    scrape_data_amazon.df.to_csv(csv_buffer, encoding='utf_8', index=False)
 
     # BLOBへの接続
     connect_str = os.getenv("AzureWebJobsStorage")
         
     # Create a blob client using the local file name as the name for the blob
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client("scrapefile", "scrapeyahoodata.csv")
+    blob_client = blob_service_client.get_blob_client("scrapefile", "scrapeamazondata.csv")
         
     # Upload the created file
     blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)
