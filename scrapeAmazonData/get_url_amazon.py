@@ -26,14 +26,24 @@ def get_url_amazon(get_pos):
         print(target)
         driver.get(target)
 
-        logging.info(f"遷移URL：{target}")
-
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
-        time.sleep(10)
+        time.sleep(5)
+
+
+        # ページ情報の取得
+        current_url = driver.current_url
+        title = driver.title
+        page_source = driver.page_source
+
+        logging.info(f"遷移URL：{current_url}")
+        logging.info(f"遷移タイトル：{title}")        
+        logging.info(f"遷移ソース：{page_source}")
 
         ## 製品ページのタグを取得
         products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
         # first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
+
+        logging.info(f"製品:{products}")
 
         print(f"製品タイトル数:{len(products)}")
         logging.info(f"製品タイトル数:{len(products)}")
