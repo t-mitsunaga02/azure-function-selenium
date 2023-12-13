@@ -15,18 +15,18 @@ RUN apt-get update \
 # See https://stackoverflow.com/questions/49132615/installing-chrome-in-docker-file
 # ARG CHROME_VERSION="google-chrome-stable"
 RUN apt-get update
-# RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb \
-#   && apt-get install -y --allow-downgrades /tmp/chrome.deb
-
-RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb \
   && apt-get install -y --allow-downgrades /tmp/chrome.deb
 
+# RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+#   && apt-get install -y --allow-downgrades /tmp/chrome.deb
+
 # 2. Install Chrome driver used by Selenium
-# RUN LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
-#     wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip && \
-#     unzip chromedriver_linux64.zip && ln -s $PWD/chromedriver /usr/local/bin/chromedriver
-RUN wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/linux64/chromedriver-linux64.zip && \
-    unzip chromedriver-linux64.zip && ln -s $PWD/chromedriver /usr/local/bin/chromedriver
+RUN LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+    wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && ln -s $PWD/chromedriver /usr/local/bin/chromedriver
+# RUN wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/linux64/chromedriver-linux64.zip && \
+#     unzip chromedriver-linux64.zip && ln -s $PWD/chromedriver /usr/local/bin/chromedriver
 
 
 ENV PATH="/usr/local/bin/chromedriver:${PATH}"
