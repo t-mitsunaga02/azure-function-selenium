@@ -20,6 +20,7 @@ def get_scrape_rakuten(url_data):
             #if文で場合分け
             target = f"https://review.rakuten.co.jp/search/{row['Item']}/204519/d0-p{n}-t1/"
             print(f'get：{target}')
+            logging.info(f"ターゲット：{row['Item']}：{target}")
 
             #ページ内のレビュー記事を一括取得
             soup = scr.request(target)
@@ -27,6 +28,7 @@ def get_scrape_rakuten(url_data):
             #ページ内のレビューを全て取得(1ページ30レビュー)
             reviews = soup.find_all('table',width="100%",border="0",cellspacing="0",cellpadding="10")
             print(f'レビュー数:{len(reviews)}')
+            logging.info(f'レビュー数:{len(reviews)}')
 
             #ページ内容レビュー記事の内容をループで全て取得
             for review in reviews:

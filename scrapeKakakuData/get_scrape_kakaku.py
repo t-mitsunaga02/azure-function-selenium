@@ -21,7 +21,7 @@ def get_scrape_kakaku(url_data):
             #商品の指定ページのURLを生成
             target = url+f'?Page={n}#tab'
             print(f'get：{target}')
-            logging.info(f'get：{target}')
+            logging.info(f"get：{row['Item']}：{target}")
     
             #レビューページの取得
             soup = scr.request(target)

@@ -28,7 +28,7 @@ def get_url_yahoo(get_pos):
         ### Googleのトップページを開く
         driver.get(f"https://www.google.com/search?q=https%3A%2F%2Fshopping.yahoo.co.jp+%E2%80%BA+products+{row['BRAND']}+{row['Item']}")
 
-        logging.info(f"遷移URL：{driver.current_url}")
+        logging.info(f"get：{driver.current_url}")
 
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(5)

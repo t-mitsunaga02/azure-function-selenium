@@ -16,7 +16,7 @@ def get_scrape_amazon(url_data):
             #商品IDからレビュー記事のページを生成
             target = f"https://www.amazon.co.jp/product-reviews/{row['asinID']}/ref=cm_cr_arp_d_viewopt_sr?ie=UTF8&filterByStar=all_stars&reviewerType=all_reviews&formatType=current_format&pageNumber={n}#reviews-filter-bar"
             #print(f'get：{target}')
-            logging.info(f'get：{target}')
+            logging.info(f"get：{row['Item']}：{target}")
 
             #ページを読み込む
             soup = scr.request(target)
