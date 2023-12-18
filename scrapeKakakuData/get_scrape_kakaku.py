@@ -51,7 +51,7 @@ def get_scrape_kakaku(url_data):
                 date = date[:date.find('日')+1]
     
                 columns = ['pos_id','item','site_name','review_date','star','title','comment']
-                values = [str(row['ID']),row['Item'],"価格コム",date,star,title,comment] 
+                values = [str(row['POS_ID']),row['Item'],"価格コム",date,star,title,comment] 
                 
                 #DataFrameに登録
                 scr.add_df(values,columns)

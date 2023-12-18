@@ -53,7 +53,7 @@ def get_scrape_amazon(url_data):
                 comment = comment.replace(',','.')
 
                 #CSV出力用のDFに登録
-                scr.add_df([str(row['ID']),row['Item'],"Amazon",date,star,title,comment],['pos_id','item','site_name','review_date','star','title','comment'],['\n'])
+                scr.add_df([str(row['POS_ID']),row['Item'],"Amazon",date,star,title,comment],['pos_id','item','site_name','review_date','star','title','comment'],['\n'])
                 #print(data_df)
 
             #ページ内のレビュー数が１０未満なら最後と判断してループを抜ける

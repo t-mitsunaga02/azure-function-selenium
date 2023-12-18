@@ -49,8 +49,8 @@ def get_url_yahoo(get_pos):
                 logging.info(f"該当URL：{target_url}")
 
                 #DataFrameに登録
-                columns = ['ID','BRAND','Item','ReviewURL']
-                values = [row['ID'],row['BRAND'],row['Item'],target_url] 
+                columns = ['POS_ID','BRAND','Item','ReviewURL']
+                values = [row['POS_ID'],row['BRAND'],row['Item'],target_url] 
                 scr.add_df(values,columns)
                 break
         # webdriverの終了

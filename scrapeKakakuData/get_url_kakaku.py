@@ -50,8 +50,8 @@ def get_url_kakaku(get_pos):
         logging.info(search_urllist_product)
 
         #DataFrameに登録
-        columns = ['ID','BRAND','Item','ReviewURL','ProductURL']
-        values = [row['ID'],row['BRAND'],row['Item'],search_urllist,search_urllist_product] 
+        columns = ['POS_ID','BRAND','Item','ReviewURL','ProductURL']
+        values = [row['POS_ID'],row['BRAND'],row['Item'],search_urllist,search_urllist_product] 
         scr.add_df(values,columns)
 
     return scr

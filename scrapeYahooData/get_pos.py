@@ -27,7 +27,7 @@ def get_pos():
     df = pd.read_csv(io.BytesIO(pos_data))
 
     ## 対象製品の選定
-    df_raw = df.filter(items=['ID','Item', 'BRAND'])
+    df_raw = df.filter(items=['POS_ID','Item', 'BRAND'])
     df_fix = df_raw[df_raw['Item'] != 'Suppressed']
     search_string = ['DAIKIN','LEVOIT','SHARP','PANASONIC','AIRDOG','DYSON','IRIS']
     pattern = '|'.join(search_string)

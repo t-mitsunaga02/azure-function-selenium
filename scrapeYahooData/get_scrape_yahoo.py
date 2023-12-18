@@ -63,7 +63,7 @@ def get_scrape_yahoo(url_data):
                 comment = ""
 
             columns = ['pos_id','item','site_name','review_date','star','title','comment']
-            values = [str(row['ID']),row['Item'],"Yahoo",date,star,title,comment] 
+            values = [str(row['POS_ID']),row['Item'],"Yahoo",date,star,title,comment] 
             
             #DataFrameに登録
             scr.add_df(values,columns,['\n'])

@@ -41,7 +41,7 @@ def get_scrape_rakuten(url_data):
                 comment = scr.get_text(review.find('font',class_='ratCustomAppearTarget'))
 
                 #CSV出力用のDFに登録
-                scr.add_df([str(row['ID']),row['Item'],"楽天",date,star,title,comment],['pos_id','item','site_name','review_date','star','title','comment'],['\n'])
+                scr.add_df([str(row['POS_ID']),row['Item'],"楽天",date,star,title,comment],['pos_id','item','site_name','review_date','star','title','comment'],['\n'])
 
             #次のページが存在するかチェック（「件数が30未満」または「「次へ」の表示がない」場合は最終ページと判断）
             target2 = f"https://review.rakuten.co.jp/search/{row['Item']}/204519/d0-p{n+1}-t1/"

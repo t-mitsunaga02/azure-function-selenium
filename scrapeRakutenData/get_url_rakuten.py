@@ -22,8 +22,8 @@ def get_url_rakuten(get_pos):
         print(search_urllist)
 
         #DataFrameに登録
-        columns = ['ID','BRAND','Item','ReviewURL']
-        values = [row['ID'],row['BRAND'],row['Item'],search_urllist] 
+        columns = ['POS_ID','BRAND','Item','ReviewURL']
+        values = [row['POS_ID'],row['BRAND'],row['Item'],search_urllist] 
         scr.add_df(values,columns)
 
     return scr

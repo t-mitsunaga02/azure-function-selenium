@@ -80,8 +80,8 @@ def get_url_amazon(get_pos):
             logging.info(f"asin:{asin}")
 
             ### DataFrameに登録
-            columns = ['ID','BRAND','Item','asinID']
-            values = [row['ID'],row['BRAND'],row['Item'],asin] 
+            columns = ['POS_ID','BRAND','Item','asinID']
+            values = [row['POS_ID'],row['BRAND'],row['Item'],asin] 
             scr.add_df(values,columns)
         # WebDriverを閉じる
         driver.quit()
