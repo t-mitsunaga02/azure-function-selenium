@@ -33,10 +33,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     print(scrape_data_amazon.df.head())
 
     # 4.CSVファイルに口コミを出力
-    scrape_data_amazon.df.to_csv("./scrape_file_amazon.csv", index=False)
-
-
-    # 4.CSVファイルに口コミを出力
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
     csv_buffer = io.StringIO()
     scrape_data_amazon.df.to_csv(csv_buffer, encoding='utf_8', index=False)
@@ -46,7 +42,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         
     # Create a blob client using the local file name as the name for the blob
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client("scrapefile", "scrapeamazondata.csv")
+    blob_client = blob_service_client.get_blob_client("scrapefile", "dashboard_motive/raw/scrapeamazondata.csv")
         
     # Upload the created file
     blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)
