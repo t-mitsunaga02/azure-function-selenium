@@ -29,7 +29,9 @@ def get_pos():
     ## 対象製品の選定
     df_raw = df.filter(items=['ID','Item', 'BRAND'])
     df_fix = df_raw[df_raw['Item'] != 'Suppressed']
-    df_fix = df_raw[(df_raw['BRAND'] == 'DAIKIN') & (df_raw['BRAND'] == 'LEVOIT') & (df_raw['BRAND'] == 'SHARP') & (df_raw['BRAND'] == 'PANASONIC') & (df_raw['BRAND'] == 'AIRDOG') & (df_raw['BRAND'] == 'DYSON') & (df_raw['BRAND'] == 'IRIS') ]
+    search_string = ['DAIKIN','LEVOIT','SHARP','PANASONIC','AIRDOG','DYSON','IRIS']
+    pattern = '|'.join(search_string)
+    df_fix = df_fix[df_fix['BRAND'].str.contains(pattern, case=False)]
 
     logging.info("Datafix:")
     logging.info(df_fix.head())
