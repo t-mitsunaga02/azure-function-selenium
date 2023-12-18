@@ -29,6 +29,7 @@ def get_pos():
     ## 対象製品の選定
     df_raw = df.filter(items=['ID','Item', 'BRAND'])
     df_fix = df_raw[df_raw['Item'] != 'Suppressed']
+    df_fix = df_raw[df_raw['BRAND'] in ('DAIKIN','LEVOIT','SHARP','PANASONIC','AIRDOG','DYSON','IRIS') ]
 
     logging.info("Datafix:")
     logging.info(df_fix.head())
