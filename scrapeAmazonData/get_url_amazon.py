@@ -20,6 +20,7 @@ def get_url_amazon(get_pos):
         # Amazon検索
         ## seleniumにてブラウザ操作するための準備
         driver = scr.get_driver()
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
         ## Amazonの検索ページを表示する
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
