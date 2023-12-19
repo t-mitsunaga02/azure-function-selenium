@@ -8,7 +8,7 @@ import time
 from urllib.parse import urlparse
 
 #スクレイピングの関数を定義する
-def get_scrape_yahoo(url_data):
+async def get_scrape_yahoo(url_data):
     scr = Scrape(wait=2,max=5)
 
     ## メーカー・製品毎にサイト検索するループ
