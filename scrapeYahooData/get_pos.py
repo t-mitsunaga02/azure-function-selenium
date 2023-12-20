@@ -23,7 +23,7 @@ def get_pos():
     blob_client_in = blob_service_client.get_blob_client(container=container_name, blob=blob_name_in)
     blob_data = blob_client_in.download_blob()
     pos_data = blob_data.readall()
-    ## DataFrame化
+    ## DataFrame化を行う
     df = pd.read_csv(io.BytesIO(pos_data))
 
     ## 対象製品の選定
