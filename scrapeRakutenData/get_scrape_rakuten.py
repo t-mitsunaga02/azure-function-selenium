@@ -54,5 +54,8 @@ def get_scrape_rakuten(url_data):
             if (len(reviews) < 30) or (len(next) < 2 ):
                 break
 
+    #コメントが重複するレコードを削除する
+    scr=scr.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
+
     #スクレイプ結果をCSVに出力
     return scr

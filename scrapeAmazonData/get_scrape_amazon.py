@@ -59,6 +59,7 @@ def get_scrape_amazon(url_data):
             #ページ内のレビュー数が１０未満なら最後と判断してループを抜ける
             if len(reviews) < 10:
                 break
-
+    #コメントが重複するレコードを削除する
+    scr=scr.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
     #スクレイプ結果をCSVに出力
     return scr
