@@ -30,8 +30,7 @@ def get_pos():
     df_raw = df.filter(items=['POS_ID','Item', 'BRAND'])
     df_fix = df_raw[df_raw['Item'] != 'Suppressed']
     search_string = ['DAIKIN','LEVOIT','SHARP','PANASONIC','AIRDOG','DYSON','IRIS']
-    pattern = '|'.join(search_string)
-    df_fix = df_fix[df_fix['BRAND'].str.contains(pattern, case=False)]
+    df_fix = df_fix[df_fix['BRAND'].str.upper().isin(search_string)] ## 大文字小文字を許して、完全一致するブランドを取得
 
     logging.info("Datafix:")
     logging.info(df_fix.head())

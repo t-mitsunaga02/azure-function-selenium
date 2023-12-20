@@ -54,4 +54,6 @@ def get_url_kakaku(get_pos):
         values = [row['POS_ID'],row['BRAND'],row['Item'],search_urllist,search_urllist_product] 
         scr.add_df(values,columns)
 
+    #コメントが重複するレコードを削除する
+    scr=scr.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
     return scr
