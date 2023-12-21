@@ -29,7 +29,7 @@ def gpt_connect(comment,question, Prerequisites):
     engine="gpt4Scrape",
     messages = message_text,
     temperature=0.7,
-    max_tokens=800,
+    max_tokens=1000,
     top_p=0.95,
     frequency_penalty=0,
     presence_penalty=0,
@@ -189,7 +189,7 @@ def scrape_gpt_get():
         reason_list = pickup_elem_from_dictionary(dict=result_dic)
         print(reason_list)
         reasons_list.append(reason_list)
-        time.sleep(25)
+        time.sleep(6)
 
     new_rows =[]
     #元のデータフレームとリストから行を生成し、新しいデータフレームに追加
