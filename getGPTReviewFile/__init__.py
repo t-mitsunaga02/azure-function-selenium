@@ -1,11 +1,27 @@
 import logging
+import json
 from .get_chatgpt import scrape_gpt_get
 from .chatgpt_merge import gpt_modify
 
 import azure.functions as func
+import asyncio
 import pandas as pd
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
+async def main(req: func.HttpRequest) -> func.HttpResponse:
+    func_url = req.url
+
+    logging.info(f"ChatGPTデータ判定処理開始")
+
+    # 非同期で処理を実行
+    asyncio.create_task(get_GPT_data())
+
+    # 監視用URLとともに応答を返す
+    return func.HttpResponse(
+        body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
+        status_code=202
+    )
+
+async def get_GPT_data():
     # 1.GPT判定処理
     gpt_data = scrape_gpt_get()
     logging.info(f"GPT:{gpt_data}")
@@ -15,18 +31,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     motive_data = gpt_modify(gpt_data)
     logging.info(f"Motive:{motive_data}")
     print(f"Motive:{motive_data}")
-
-# データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
-# csv_buffer = io.StringIO()
-# link_list.to_csv(csv_buffer, encoding='utf_8', index=False)
-
-# logging.warn(link_list)
-
-# # Blobへのアップロード
-# blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_out)
-# blob_client.upload_blob(link_list)
-
-
-    return func.HttpResponse(
-                status_code=200
-    )

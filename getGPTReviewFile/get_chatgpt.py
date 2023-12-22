@@ -6,6 +6,7 @@ import pandas as pd
 import openai
 import time
 import ast
+import re
 import os
 import io
 
@@ -28,11 +29,13 @@ def gpt_connect(comment,question, Prerequisites):
     completion = openai.ChatCompletion.create(
     engine="gpt4Scrape",
     messages = message_text,
-    temperature=0.7,
-    max_tokens=1000,
+    temperature=0.0,
+    max_tokens=1600,
     top_p=0.95,
-    frequency_penalty=0,
+    frequency_penalty=1,
     presence_penalty=0,
+    n=1,
+    stream=False,
     stop=None
     )
 
@@ -40,8 +43,16 @@ def gpt_connect(comment,question, Prerequisites):
     str_dict = remove_before_bracket(input_str=str_dict)
     str_dict = remove_after_bracket(input_str=str_dict)
 
+    """出力がjsonでない場合への対応 """
+    # キーにダブルクォーテーションが含まれているかチェック
+    if not re.search(r'"\w+":', str_dict):
+        # キーにダブルクォーテーションが含まれていない場合、正規表現でキーにダブルクォーテーションを付ける
+        fixed_response = re.sub(r'(\w+):', add_quotes, str_dict)
+    else:
+        fixed_response = str_dict
+
     #辞書型に変換
-    converted_dict = ast.literal_eval(str_dict)
+    converted_dict = ast.literal_eval(fixed_response)
     result_dict={}
     for key, value in converted_dict.items():
         if not isinstance(value, list):
@@ -189,7 +200,7 @@ def scrape_gpt_get():
         reason_list = pickup_elem_from_dictionary(dict=result_dic)
         print(reason_list)
         reasons_list.append(reason_list)
-        time.sleep(2)
+        time.sleep(1)
 
     new_rows =[]
     #元のデータフレームとリストから行を生成し、新しいデータフレームに追加
