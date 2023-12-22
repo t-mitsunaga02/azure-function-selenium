@@ -15,7 +15,7 @@ import os
 async def main(req: func.HttpRequest) -> func.HttpResponse:
     func_url = req.url
 
-    logging.info(f"価格コムスクレイピング処理開始")
+    logging.info(f"楽天スクレイピング処理開始")
 
     # 非同期で処理を実行
     asyncio.create_task(scrape_rakuten())
