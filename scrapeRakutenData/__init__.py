@@ -1,4 +1,5 @@
 import logging
+import json
 from .class_file import Scrape
 from .get_pos import get_pos
 from .get_url_rakuten import get_url_rakuten
@@ -6,11 +7,26 @@ from .get_scrape_rakuten import get_scrape_rakuten
 
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient
+import asyncio
 import pandas as pd
 import io
 import os
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
+async def main(req: func.HttpRequest) -> func.HttpResponse:
+    func_url = req.url
+
+    logging.info(f"価格コムスクレイピング処理開始")
+
+    # 非同期で処理を実行
+    asyncio.create_task(scrape_rakuten())
+
+    # 監視用URLとともに応答を返す
+    return func.HttpResponse(
+        body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
+        status_code=202
+    )
+
+async def scrape_rakuten():
 
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
@@ -47,13 +63,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         
     # Upload the created file
     blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)
-
-
-    # # Blobへのアップロード
-    # blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_out)
-    # blob_client.upload_blob(link_list)
-
-
-    return func.HttpResponse(
-                status_code=200
-    )
