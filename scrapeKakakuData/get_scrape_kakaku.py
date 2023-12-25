@@ -60,7 +60,7 @@ def get_scrape_kakaku(url_data):
             if len(reviews) < 15:
                 break
     #コメントが重複するレコードを削除する
-    scr = scr.df.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
+    scr.df.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
 
     #スクレイプ結果をCSVに出力
     return scr
