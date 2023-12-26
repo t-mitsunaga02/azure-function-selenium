@@ -46,8 +46,10 @@ def gpt_modify(gpt_data):
         print("一括")
         logging.info("一括")
 
-        # 戻り値の統一
+        # IDの採番
         union_df = gpt_data[['review_id', 'reason']]
+        union_df.insert(0, 'reason_id', range(1, 1 + len(union_df)))
+
         # データをCSVファイルとして出力 
         output_blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_diff_in)
         output_blob_client.upload_blob(union_df.to_csv(index=False, encoding='utf_8'), blob_type="BlockBlob", overwrite=True)
