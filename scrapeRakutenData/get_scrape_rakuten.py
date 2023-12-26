@@ -59,6 +59,8 @@ def get_scrape_rakuten(url_data):
             # タグの製品名内の空白が「+」であるため文字列変換
             if ' ' in row['Item'] :
                 item_replace = str(row['Item']).replace(' ', '+')
+            else :
+                item_replace = row['Item']
             #次のページが存在するかチェック（「件数が30未満」または「「次へ」の表示がない」場合は最終ページと判断）
             target2 = f"https://review.rakuten.co.jp/search/{item_replace}/204519/d0-p{n+1}-t1/"
             next = scr.get_text(soup.find('a',href = target2,style ="font-weight:bold;"))
