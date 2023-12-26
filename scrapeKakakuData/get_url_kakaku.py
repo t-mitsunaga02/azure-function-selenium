@@ -11,12 +11,12 @@ def get_url_kakaku(get_pos):
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
 
-    # 2.各サイトURL検索
-    ## seleniumにてブラウザ操作するための準備
-    driver = scr.get_driver()
-
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
+
+        # 2.各サイトURL検索
+        ## seleniumにてブラウザ操作するための準備
+        driver = scr.get_driver()
 
         ## メーカー・製品名の抽出
         search_word = f"{row['BRAND']} {row['Item']}"
@@ -53,5 +53,8 @@ def get_url_kakaku(get_pos):
         columns = ['POS_ID','BRAND','Item','ReviewURL','ProductURL']
         values = [row['POS_ID'],row['BRAND'],row['Item'],search_urllist,search_urllist_product] 
         scr.add_df(values,columns)
+
+        # webdriverの終了
+        driver.quit()
 
     return scr
