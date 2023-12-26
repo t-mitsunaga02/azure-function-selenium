@@ -46,6 +46,6 @@ async def scrape_yahoo():
     # 3.Yahooスクレイピング
     scrape_data_yahoo = get_scrape_yahoo(url_data_yahoo.df)
     logging.info("scrapeyahoo:")
-    logging.info(scrape_data_yahoo.df)
-    print(scrape_data_yahoo.df.head())
+    logging.info(scrape_data_yahoo)
+    print(scrape_data_yahoo.head())
 

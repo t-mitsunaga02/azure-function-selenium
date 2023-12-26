@@ -20,6 +20,7 @@ def get_scrape_yahoo(url_data):
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
     # BLOB入出力先の設定
     container_name = "scrapefile"
+    blob_name_diff_out_tmp = "dashboard_motive/raw/scrapeyahoodata_tmp.csv"
     blob_name_diff_out = "dashboard_motive/raw/scrapeyahoodata.csv"
 
     ## メーカー・製品毎にサイト検索するループ
@@ -81,16 +82,16 @@ def get_scrape_yahoo(url_data):
 
 
         # データをCSVファイルとして出力 
-        output_blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_diff_out)
+        output_blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_diff_out_tmp)
         output_blob_client.upload_blob(scr.df.to_csv(index=False, encoding='utf_8'), blob_type="BlockBlob", overwrite=True)
 
         # webdriverの終了
         driver.quit()
 
     #コメントが重複するレコードを削除する
-    scr.df.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
+    scr_dup = scr.df.drop_duplicates(subset=['pos_id', 'site_name', 'review_date', 'comment'])
     # 重複削除後再アップロード
-    output_blob_client.upload_blob(scr.df.to_csv(index=False, encoding='utf_8'), blob_type="BlockBlob", overwrite=True)
+    output_blob_client.upload_blob(scr_dup.to_csv(index=False, encoding='utf_8'), blob_type="BlockBlob", overwrite=True)
 
     #スクレイプ結果をCSVに出力
-    return scr
+    return scr_dup
