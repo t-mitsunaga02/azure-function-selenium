@@ -49,17 +49,3 @@ async def scrape_yahoo():
     logging.info(scrape_data_yahoo.df)
     print(scrape_data_yahoo.df.head())
 
-    # 4.CSVファイルに口コミを出力
-    # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
-    csv_buffer = io.StringIO()
-    scrape_data_yahoo.df.to_csv(csv_buffer, encoding='utf_8', index=False)
-
-    # BLOBへの接続
-    connect_str = os.getenv("AzureWebJobsStorage")
-        
-    # Create a blob client using the local file name as the name for the blob
-    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client("scrapefile", "dashboard_motive/raw/scrapeyahoodata.csv")
-        
-    # Upload the created file
-    blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)
