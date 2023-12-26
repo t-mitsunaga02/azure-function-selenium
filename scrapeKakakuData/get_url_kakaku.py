@@ -36,7 +36,8 @@ def get_url_kakaku(get_pos):
         time.sleep(3)
 
         ### 最初の検索結果のリンクを取得
-        first_result = driver.find_element(By.CSS_SELECTOR, "h3")
+        link = driver.find_element(By.CSS_SELECTOR, 'div.MjjYud')
+        first_result = link.find_element(By.CSS_SELECTOR, "h3")
         first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
 
         ### URLリスト用に加工(口コミ・製品情報ともに取得)

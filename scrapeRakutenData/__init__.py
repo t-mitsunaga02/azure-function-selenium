@@ -18,7 +18,7 @@ async def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"楽天スクレイピング処理開始")
 
     # 非同期で処理を実行
-    await scrape_rakuten()
+    asyncio.create_task(scrape_rakuten())
 
     # 監視用URLとともに応答を返す
     return func.HttpResponse(
