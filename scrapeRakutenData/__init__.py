@@ -13,20 +13,20 @@ import io
 import os
 
 async def main(req: func.HttpRequest) -> func.HttpResponse:
-#     func_url = req.url
+    func_url = req.url
 
-#     logging.info(f"楽天スクレイピング処理開始")
+    logging.info(f"楽天スクレイピング処理開始")
 
-#     # 非同期で処理を実行
-#     asyncio.create_task(scrape_rakuten())
+    # 非同期で処理を実行
+    await scrape_rakuten()
 
-#     # 監視用URLとともに応答を返す
-#     return func.HttpResponse(
-#         body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
-#         status_code=202
-#     )
+    # 監視用URLとともに応答を返す
+    return func.HttpResponse(
+        body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
+        status_code=202
+    )
 
-# async def scrape_rakuten():
+async def scrape_rakuten():
 
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
@@ -48,7 +48,3 @@ async def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("scraperakuten:")
     logging.info(scrape_data_rakuten)
     print(scrape_data_rakuten.head())
-
-    return func.HttpResponse(
-        status_code=200
-    )
