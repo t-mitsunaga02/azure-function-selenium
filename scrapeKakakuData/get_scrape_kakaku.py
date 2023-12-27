@@ -45,6 +45,10 @@ def get_scrape_kakaku(url_data):
             #ページ内のすべてと評価を一括取得
             evals = soup.find_all('div',class_='reviewBoxWtInner')
             
+            # ページ送り終了条件の準備
+            next_page = ""
+            a_tag = soup.find('a', string='次のページへ')
+
             print(f'レビュー数:{len(reviews)}')
             logging.info(f'レビュー数:{len(reviews)}')
             
@@ -67,8 +71,12 @@ def get_scrape_kakaku(url_data):
                 #DataFrameに登録
                 scr.add_df(values,columns)
 
+            # ページ送りの終了条件判定
+            if a_tag:
+                next_page = a_tag.get('href')
+
             #ページ内のレビュー数が15未満なら、最後のページと判断してループを抜ける
-            if len(reviews) < 15:
+            if len(reviews) < 15 or next_page == "":
                 break
 
         # データをCSVファイルとして出力 
