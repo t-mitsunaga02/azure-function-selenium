@@ -13,20 +13,20 @@ import io
 import os
 
 async def main(req: func.HttpRequest) -> func.HttpResponse:
-    func_url = req.url
+#     func_url = req.url
 
-    logging.info(f"Yahooスクレイピング処理開始")
+#     logging.info(f"Yahooスクレイピング処理開始")
 
-    # 非同期で処理を実行
-    asyncio.create_task(scrape_yahoo())
+#     # 非同期で処理を実行
+#     asyncio.create_task(scrape_yahoo())
 
-    # 監視用URLとともに応答を返す
-    return func.HttpResponse(
-        body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
-        status_code=202
-    )
+#     # 監視用URLとともに応答を返す
+#     return func.HttpResponse(
+#         body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
+#         status_code=202
+#     )
 
-async def scrape_yahoo():
+# async def scrape_yahoo():
 
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
@@ -49,3 +49,6 @@ async def scrape_yahoo():
     logging.info(scrape_data_yahoo)
     print(scrape_data_yahoo.head())
 
+    return func.HttpResponse(
+        status_code=200
+    )
