@@ -166,7 +166,7 @@ def scrape_gpt_get():
     # BLOB入出力先の設定
     container_name = "scrapefile"
     blob_name_diff_in = "dashboard_motive/modify/diff/motive_modify_difffile.csv"
-    blob_name_diff_out_tmp = "dashboard_motive/modify/motive_modify_difffile_tmp.csv"
+    blob_name_diff_out_tmp = "dashboard_motive/modify/difffile_tmp"
 
     blob_client_in = blob_service_client.get_blob_client(container=container_name, blob=blob_name_diff_in)
     blob_data = blob_client_in.download_blob()
