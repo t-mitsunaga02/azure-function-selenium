@@ -204,7 +204,7 @@ def scrape_gpt_get():
 
         # 途中経過確認用に一定の回数ごとにファイル出力
         if index % 5 == 0:
-            tmp_df = pd.DataFrame([reasons_list['review_id'], reasons_list['pos_id'], reason_list], columns=['review_id', 'pos_id', 'reason'])
+            tmp_df = pd.DataFrame([str(reasons_list['review_id']), str(reasons_list['pos_id']), reason_list], columns=['review_id', 'pos_id', 'reason'])
             output_blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_diff_out_tmp)
             output_blob_client.upload_blob(tmp_df.to_csv(index=False, encoding='utf_8'), blob_type="BlockBlob", overwrite=True)
 
