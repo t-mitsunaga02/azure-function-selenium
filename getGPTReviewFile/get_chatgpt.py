@@ -206,7 +206,7 @@ def scrape_gpt_get():
         if index % 5 == 0:
             tmp_df = f"{str(row['review_id'])}:{str(row['pos_id'])}まで実行中"
             output_blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name_diff_out_tmp)
-            output_blob_client.upload_blob(tmp_df)
+            output_blob_client.upload_blob(tmp_df, overwrite=True)
 
         time.sleep(2)
 
