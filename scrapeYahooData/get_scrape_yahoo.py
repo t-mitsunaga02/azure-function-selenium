@@ -36,6 +36,7 @@ def get_scrape_yahoo(url_data):
         driver.get(row['ReviewURL'])
         print(row['ReviewURL'])
         logging.info(f"get：{row['Item']}：{row['ReviewURL']}")
+        time.sleep(3)
 
         #レビューボタンクリック
         review_button = driver.find_element(By.XPATH, '//button[@data-cl-params="_cl_link:review;_cl_position:0;"]')
