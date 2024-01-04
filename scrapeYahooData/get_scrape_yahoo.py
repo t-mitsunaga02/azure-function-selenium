@@ -37,12 +37,17 @@ def get_scrape_yahoo(url_data):
         driver.get(row['ReviewURL'])
         print(row['ReviewURL'])
         logging.info(f"get：{row['Item']}：{row['ReviewURL']}")
-        time.sleep(random.randint(2,4))
+        time.sleep(random.randint(3,5))
 
         #レビューボタンクリック
-        review_button = driver.find_element(By.XPATH, '//button[@data-cl-params="_cl_link:review;_cl_position:0;"]')
-        review_button.click()
-        time.sleep(random.randint(2,4))
+        try:
+            review_button = driver.find_element(By.XPATH, '//button[@data-cl-params="_cl_link:review;_cl_position:0;"]')
+            review_button.click()
+            time.sleep(random.randint(2,3))
+        except NoSuchElementException:
+            # レビューボタンがない場合は処理を抜ける
+            logging.info(f"out：{driver.current_url}")
+            break        
 
         #もっと見るボタンを表示される限りクリックし続けてレビューを全件表示させる。
         while True:
