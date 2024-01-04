@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
+import random
 from urllib.parse import urlparse
 from azure.storage.blob import BlobServiceClient
 import os
@@ -36,12 +37,12 @@ def get_scrape_yahoo(url_data):
         driver.get(row['ReviewURL'])
         print(row['ReviewURL'])
         logging.info(f"get：{row['Item']}：{row['ReviewURL']}")
-        time.sleep(3)
+        time.sleep(random.randint(2,4))
 
         #レビューボタンクリック
         review_button = driver.find_element(By.XPATH, '//button[@data-cl-params="_cl_link:review;_cl_position:0;"]')
         review_button.click()
-        time.sleep(3)
+        time.sleep(random.randint(2,4))
 
         #もっと見るボタンを表示される限りクリックし続けてレビューを全件表示させる。
         while True:

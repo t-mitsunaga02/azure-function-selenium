@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
+import random
 import pandas as pd
 from urllib.parse import urlparse
 
@@ -31,7 +32,7 @@ def get_url_yahoo(get_pos):
         logging.info(f"get：{driver.current_url}")
 
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）
-        time.sleep(5)
+        time.sleep(random.randint(4,7))
 
         ### 検索結果のリンクを収集
         links = driver.find_elements(By.CSS_SELECTOR, 'div.MjjYud')
