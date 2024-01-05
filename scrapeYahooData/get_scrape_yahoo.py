@@ -45,9 +45,9 @@ def get_scrape_yahoo(url_data):
             review_button.click()
             time.sleep(random.randint(2,3))
         except NoSuchElementException:
-            # レビューボタンがない場合は処理を抜ける
-            logging.info(f"out：{driver.current_url}")
-            break        
+            # レビューボタンがない場合は次の製品へ
+            logging.info(f"out：{driver.current_url}")   
+            continue    
 
         #もっと見るボタンを表示される限りクリックし続けてレビューを全件表示させる。
         while True:
