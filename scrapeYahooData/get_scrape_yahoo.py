@@ -19,8 +19,8 @@ def get_scrape_yahoo(url_data):
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
     # BLOB入出力先の設定
     container_name = "scrapefile"
-    blob_name_diff_out_tmp = "dashboard_motive/scrapeyahoodata_tmp.csv"
-    blob_name_diff_out = "dashboard_motive/raw/scrapeyahoodata.csv"
+    blob_name_diff_out_tmp = "dashboard_motive/modify/scrapeyahoodata_tmp.csv"
+    blob_name_diff_out = "dashboard_motive/scrapeyahoodata.csv"
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in url_data.iterrows():

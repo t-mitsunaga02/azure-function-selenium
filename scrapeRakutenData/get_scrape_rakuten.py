@@ -16,8 +16,8 @@ def get_scrape_rakuten(url_data):
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
     # BLOB入出力先の設定
     container_name = "scrapefile"
-    blob_name_diff_out_tmp = "dashboard_motive/scraperakutendata_tmp.csv"
-    blob_name_diff_out = "dashboard_motive/raw/scraperakutendata.csv"
+    blob_name_diff_out_tmp = "dashboard_motive/modify/scraperakutendata_tmp.csv"
+    blob_name_diff_out = "dashboard_motive/scraperakutendata.csv"
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in url_data.iterrows():
