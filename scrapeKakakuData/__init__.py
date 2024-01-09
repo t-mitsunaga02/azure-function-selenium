@@ -13,20 +13,20 @@ import io
 import os
 
 async def main(req: func.HttpRequest) -> func.HttpResponse:
-    func_url = req.url
+#     func_url = req.url
 
-    logging.info(f"価格コムスクレイピング処理開始")
+#     logging.info(f"価格コムスクレイピング処理開始")
 
-    # 非同期で処理を実行
-    asyncio.create_task(scrape_kakaku())
+#     # 非同期で処理を実行
+#     asyncio.create_task(scrape_kakaku())
 
-    # 監視用URLとともに応答を返す
-    return func.HttpResponse(
-        body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
-        status_code=202
-    )
+#     # 監視用URLとともに応答を返す
+#     return func.HttpResponse(
+#         body=json.dumps({"status": "started", "monitor_url": func_url + "/status"}),
+#         status_code=202
+#     )
 
-async def scrape_kakaku():
+# async def scrape_kakaku():
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
 
@@ -47,3 +47,7 @@ async def scrape_kakaku():
     logging.info("scrapekakaku:")
     logging.info(scrape_data_kakaku)
     print(scrape_data_kakaku.head())
+
+    return func.HttpResponse(
+        status_code=200
+    )
