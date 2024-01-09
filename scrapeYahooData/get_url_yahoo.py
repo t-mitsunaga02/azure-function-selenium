@@ -6,12 +6,18 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
 import random
+import os
+import datetime
 import pandas as pd
 from urllib.parse import urlparse
 
 def get_url_yahoo(get_pos):
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
+
+    # エラー出力用に実行中のファイル名を取得する
+    file_path = os.path.abspath(__file__)
+    file_name = os.path.basename(file_path)
 
     # 2.各サイトURL検索
 
@@ -45,9 +51,13 @@ def get_url_yahoo(get_pos):
             except NoSuchElementException:
                 domain = ""
             if domain == "https://shopping.yahoo.co.jp › products":
-                target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
-                print(target_url)
-                logging.info(f"該当URL：{target_url}")
+                try:
+                    target_url = link.find_element(By.TAG_NAME,'a').get_attribute("href")
+                    print(target_url)
+                    logging.info(f"該当URL：{target_url}")
+                except NoSuchElementException as e:
+                    # エラー内容を出力し、後続の処理実行
+                    logging.info(f"yahoo,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e}")
 
                 #DataFrameに登録
                 columns = ['POS_ID','BRAND','Item','ReviewURL']

@@ -5,10 +5,16 @@ import time
 from urllib.parse import urlparse
 from azure.storage.blob import BlobServiceClient
 import os
+import datetime
+import requests
 
 #スクレイピングの関数を定義する
 def get_scrape_kakaku(url_data):
     scr = Scrape(wait=2,max=5)
+
+    # エラー出力用に実行中のファイル名を取得する
+    file_path = os.path.abspath(__file__)
+    file_name = os.path.basename(file_path)
 
     # BLOBへの接続
     connect_str = os.getenv("AzureWebJobsStorage")
@@ -33,12 +39,17 @@ def get_scrape_kakaku(url_data):
             target = url+f'?Page={n}#tab'
             print(f'get：{target}')
             logging.info(f"get：{row['Item']}：{target}")
-    
-            #レビューページの取得
-            soup = scr.request(target)
-            time.sleep(3)
 
-            print(row['Item'])
+            try:
+                #レビューページの取得
+                soup = scr.request(target)
+                time.sleep(3)
+
+                print(row['Item'])
+            except requests.exceptions.HTTPError as e_rrh:
+                # エラー内容を出力し、処理を抜ける
+                logging.info(f"kakaku,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e_rrh}")
+                break
 
             #ページ内のレビュー記事を一括取得
             reviews = soup.find_all('div',class_='revMainClmWrap')
@@ -54,17 +65,22 @@ def get_scrape_kakaku(url_data):
             
             #ページ内の全てのレビューをループで取り出す
             for review,eval in zip(reviews,evals):
-                #レビューのタイトルを取得
-                title = scr.get_text(review.find('div',class_='reviewTitle'))
-                #レビューの内容を取得
-                comment = scr.get_text(review.find('p',class_='revEntryCont')).replace('<br>','')
-    
-                #満足度（デザイン、処理速度、グラフィック性能、拡張性、・・・・・の値を取得
-                tables = eval.find_all('table')
-                star = scr.get_text(tables[0].find('td'))
-                date = scr.get_text(eval.find('p',class_='entryDate clearfix'))
-                date = date[:date.find('日')+1]
-    
+                try:
+                    #レビューのタイトルを取得
+                    title = scr.get_text(review.find('div',class_='reviewTitle'))
+                    #レビューの内容を取得
+                    comment = scr.get_text(review.find('p',class_='revEntryCont')).replace('<br>','')
+        
+                    #満足度（デザイン、処理速度、グラフィック性能、拡張性、・・・・・の値を取得
+                    tables = eval.find_all('table')
+                    star = scr.get_text(tables[0].find('td'))
+                    date = scr.get_text(eval.find('p',class_='entryDate clearfix'))
+                    date = date[:date.find('日')+1]
+                except requests.exceptions.RequestException as e_req:
+                    # エラー内容を出力し、後続の処理実行
+                    logging.info(f"kakaku,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e_req}")
+                    continue
+
                 columns = ['pos_id','item','site_name','review_date','star','title','comment']
                 values = [str(row['POS_ID']),row['Item'],"価格コム",date,star,title,comment] 
                 

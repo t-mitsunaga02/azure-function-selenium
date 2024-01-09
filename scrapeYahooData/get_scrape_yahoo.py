@@ -3,16 +3,22 @@ from .class_file import Scrape
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
+from selenium.common.exceptions import NoSuchElementException,WebDriverException #要素が見つからなかった時用
 import time
 import random
+import os
+import datetime
 from urllib.parse import urlparse
 from azure.storage.blob import BlobServiceClient
-import os
 
 #スクレイピングの関数を定義する
 def get_scrape_yahoo(url_data):
     scr = Scrape(wait=2,max=5)
+
+    # エラー出力用に実行中のファイル名を取得する
+    file_path = os.path.abspath(__file__)
+    file_name = os.path.basename(file_path)
+
     # BLOBへの接続
     connect_str = os.getenv("AzureWebJobsStorage")
     # Create a blob client using the local file name as the name for the blob
@@ -33,20 +39,24 @@ def get_scrape_yahoo(url_data):
         # df = pd.DataFrame(columns=df_columns)
 
         # Selenium 設定
-        driver = scr.get_driver()
-        driver.get(row['ReviewURL'])
-        print(row['ReviewURL'])
-        logging.info(f"get：{row['Item']}：{row['ReviewURL']}")
-        time.sleep(random.randint(3,5))
+        try:
+            driver = scr.get_driver()
+            driver.get(row['ReviewURL'])
+            logging.info(f"get：{row['Item']}：{row['ReviewURL']}")
+            time.sleep(random.randint(3,5))
+        except WebDriverException as e_web:
+            # エラー内容を出力し、処理を抜ける
+            logging.info(f"yahoo,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e_web}")
+            break
 
         #レビューボタンクリック
         try:
             review_button = driver.find_element(By.XPATH, '//button[@data-cl-params="_cl_link:review;_cl_position:0;"]')
             review_button.click()
             time.sleep(random.randint(2,3))
-        except NoSuchElementException:
+        except NoSuchElementException as e:
             # レビューボタンがない場合は次の製品へ
-            logging.info(f"out：{driver.current_url}")   
+            logging.info(f"out：{driver.current_url}") 
             continue    
 
         #もっと見るボタンを表示される限りクリックし続けてレビューを全件表示させる。
@@ -68,8 +78,13 @@ def get_scrape_yahoo(url_data):
 
         # レビュー毎のループ
         for i in range(len(reviews) //2) :
-            date = reviews[i].find_element(By.CSS_SELECTOR, "div.style_reviewComment__date__7vpOE").find_element(By.TAG_NAME, "span").text
-            star = reviews[i].find_element(By.CSS_SELECTOR, "span.Review__average").text
+            try:
+
+                date = reviews[i].find_element(By.CSS_SELECTOR, "div.style_reviewComment__date__7vpOE").find_element(By.TAG_NAME, "span").text
+                star = reviews[i].find_element(By.CSS_SELECTOR, "span.Review__average").text
+            except NoSuchElementException as e:
+                # エラー内容を出力し、後続の処理実行
+                logging.info(f"yahoo,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e}")
             try:
                 title = reviews[i].find_element(By.CSS_SELECTOR, "span.style_reviewComment__titleText__FeaWf").text
             except NoSuchElementException:

@@ -5,10 +5,16 @@ import time
 from urllib.parse import urlparse
 from azure.storage.blob import BlobServiceClient
 import os
+import datetime
+import requests
 
 #スクレイピングの関数を定義する
 def get_scrape_rakuten(url_data):
     scr = Scrape(wait=2,max=5)
+
+    # エラー出力用に実行中のファイル名を取得する
+    file_path = os.path.abspath(__file__)
+    file_name = os.path.basename(file_path)
 
     # BLOBへの接続
     connect_str = os.getenv("AzureWebJobsStorage")
@@ -28,13 +34,17 @@ def get_scrape_rakuten(url_data):
         ## ページがあるだけループする
         for n in range(1,1000):
             #商品の指定ページのURLを生成
-            #if文で場合分け
             target = f"https://review.rakuten.co.jp/search/{row['Item']}/204519/d0-p{n}-t1/"
             print(f'get：{target}')
             logging.info(f"get：{row['Item']}：{target}")
 
             #ページ内のレビュー記事を一括取得
-            soup = scr.request(target)
+            try:
+                soup = scr.request(target)
+            except requests.exceptions.HTTPError as e_rrh:
+                # エラー内容を出力し、処理を抜ける
+                logging.info(f"rakuten,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e_rrh}")
+                break
 
             #ページ内のレビューを全て取得(1ページ30レビュー)
             reviews = soup.find_all('table',width="100%",border="0",cellspacing="0",cellpadding="10")
@@ -43,15 +53,20 @@ def get_scrape_rakuten(url_data):
 
             #ページ内容レビュー記事の内容をループで全て取得
             for review in reviews:
-                # 日付は「2023年02月05日 12:10」という形式で取得されるので、日付部分の文字列のみ抽出
-                date = scr.get_text(review.find('td',style="text-align:right"))
-                date = date[:date.find('日')+1]
-                # 評価は「評価  5.00」という記述のされ方なので、数値のみを取得
-                star = scr.get_text(review.find('span',style="color: #f60;"))
-                star = star[4:]
+                try:
+                    # 日付は「2023年02月05日 12:10」という形式で取得されるので、日付部分の文字列のみ抽出
+                    date = scr.get_text(review.find('td',style="text-align:right"))
+                    date = date[:date.find('日')+1]
+                    # 評価は「評価  5.00」という記述のされ方なので、数値のみを取得
+                    star = scr.get_text(review.find('span',style="color: #f60;"))
+                    star = star[4:]
 
-                title = scr.get_text(review.find('font',size="-1",color="#666666"))
-                comment = scr.get_text(review.find('font',class_='ratCustomAppearTarget'))
+                    title = scr.get_text(review.find('font',size="-1",color="#666666"))
+                    comment = scr.get_text(review.find('font',class_='ratCustomAppearTarget'))
+                except requests.exceptions.RequestException as e_req:
+                    # エラー内容を出力し、後続の処理実行
+                    logging.info(f"rakuten,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e_req}")
+                    continue
 
                 #CSV出力用のDFに登録
                 scr.add_df([str(row['POS_ID']),row['Item'],"楽天",date,star,title,comment],['pos_id','item','site_name','review_date','star','title','comment'],['\n'])

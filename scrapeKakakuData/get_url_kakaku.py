@@ -3,13 +3,20 @@ from .class_file import Scrape
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
+import os
+import datetime
 import pandas as pd
 from urllib.parse import urlparse
 
 def get_url_kakaku(get_pos):
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
+
+    # エラー出力用に実行中のファイル名を取得する
+    file_path = os.path.abspath(__file__)
+    file_name = os.path.basename(file_path)
 
     ## メーカー・製品毎にサイト検索するループ
     for index, row in get_pos.iterrows():
@@ -35,10 +42,15 @@ def get_url_kakaku(get_pos):
         ### 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(3)
 
-        ### 最初の検索結果のリンクを取得
-        link = driver.find_element(By.CSS_SELECTOR, 'div.MjjYud')
-        first_result = link.find_element(By.CSS_SELECTOR, "h3")
-        first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
+        try:
+            ### 最初の検索結果のリンクを取得
+            link = driver.find_element(By.CSS_SELECTOR, 'div.MjjYud')
+            first_result = link.find_element(By.CSS_SELECTOR, "h3")
+            first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
+        except NoSuchElementException as e:
+            # エラー内容を出力し、処理を抜ける
+            logging.info(f"kakaku,{row['Item']},{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')},{file_name},{e}")
+            continue 
 
         ### URLリスト用に加工(口コミ・製品情報ともに取得)
         parsed_url = urlparse(first_link).path
