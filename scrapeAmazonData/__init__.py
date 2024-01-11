@@ -29,20 +29,20 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # 3.Amazonスクレイピング
     scrape_data_amazon = get_scrape_amazon(url_data_amazon.df)
     logging.info("scrapeamazon:")
-    logging.info(scrape_data_amazon.df)
-    print(scrape_data_amazon.df.head())
+    logging.info(scrape_data_amazon)
+    print(scrape_data_amazon.head())
 
     # 4.CSVファイルに口コミを出力
     # データフレームをCSV形式の文字列に変換し、その文字列をメモリ上のストリームに書き込む
     csv_buffer = io.StringIO()
-    scrape_data_amazon.df.to_csv(csv_buffer, encoding='utf_8', index=False)
+    scrape_data_amazon.to_csv(csv_buffer, encoding='utf_8', index=False)
 
     # BLOBへの接続
     connect_str = os.getenv("AzureWebJobsStorage")
         
     # Create a blob client using the local file name as the name for the blob
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client("scrapefile", "dashboard_motive/raw/scrapeamazondata.csv")
+    blob_client = blob_service_client.get_blob_client("scrapefile", "dashboard_KPI/scrapeamazondata.csv")
         
     # Upload the created file
     blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)

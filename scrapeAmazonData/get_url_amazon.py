@@ -1,13 +1,10 @@
-import logging
 from .class_file import Scrape
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException #要素が見つからなかった時用
 import time
 import pandas as pd
 from urllib.parse import urlparse
-import re
 
 def get_url_amazon(get_pos):
     scr = Scrape(wait=3,max=5)
@@ -20,7 +17,6 @@ def get_url_amazon(get_pos):
         # Amazon検索
         ## seleniumにてブラウザ操作するための準備
         driver = scr.get_driver()
-        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
         ## Amazonの検索ページを表示する
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
@@ -30,24 +26,11 @@ def get_url_amazon(get_pos):
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(5)
 
-
-        # ページ情報の取得
-        current_url = driver.current_url
-        title = driver.title
-        page_source = driver.page_source
-
-        logging.info(f"遷移URL：{current_url}")
-        logging.info(f"遷移タイトル：{title}")        
-        logging.info(f"遷移ソース：{page_source}")
-
         ## 製品ページのタグを取得
         products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
-        # first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
-
-        logging.info(f"製品:{products}")
+        #  first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
 
         print(f"製品タイトル数:{len(products)}")
-        logging.info(f"製品タイトル数:{len(products)}")
 
         asin_list = []
         for product in products:
@@ -72,13 +55,12 @@ def get_url_amazon(get_pos):
                     continue
             else:
                 ### LEVOITの場合は値段でフィルタ判断
-                if money_text <= 5000:
+                if money_text <= 7000 or "用フィルタ" in title_text or "空気清浄機用" in title_text or "交換" in title_text:
                     continue
 
             print(f"タイトル：{title_text}")
             asin = product.get_attribute("data-asin")
             print(asin)
-            logging.info(f"asin:{asin}")
 
             ### DataFrameに登録
             columns = ['POS_ID','BRAND','Item','asinID']
@@ -140,4 +122,3 @@ def get_url_amazon(get_pos):
             #     continue
 
     return scr
-
