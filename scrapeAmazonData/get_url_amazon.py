@@ -30,8 +30,8 @@ def get_url_amazon(get_pos):
         logging.info(f"get：{driver.current_url}")
 
         ## 製品ページのタグを取得
-        products = driver.find_elements(By.XPATH, "//*")
-        # products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
+        # products = driver.find_elements(By.XPATH, "//*")
+        products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
         #  first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
         for element in products:
             logging.info(f"テキスト:{element.tag_name}, {element.text}")
