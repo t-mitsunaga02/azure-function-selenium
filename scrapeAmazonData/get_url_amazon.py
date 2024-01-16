@@ -27,6 +27,7 @@ def get_url_amazon(get_pos):
 
         ## 検索結果ページがロードされるのを待つ（例: 3秒待つ）
         time.sleep(5)
+        logging.info(f"get：{driver.current_url}")
 
         ## 製品ページのタグを取得
         products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')

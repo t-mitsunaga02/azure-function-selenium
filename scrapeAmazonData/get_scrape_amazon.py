@@ -31,6 +31,7 @@ def get_scrape_amazon(url_data):
             logging.info(f"ページ遷移：{target}")
 
             time.sleep(5)
+            logging.info(f"get：{driver.current_url}")
 
             #ページ内のレビューを全て取得(1ページ10レビュー)
             reviews = driver.find_elements(By.CSS_SELECTOR, 'div.a-section.review.aok-relative')
