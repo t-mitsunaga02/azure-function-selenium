@@ -30,48 +30,51 @@ def get_url_amazon(get_pos):
         logging.info(f"get：{driver.current_url}")
 
         ## 製品ページのタグを取得
-        products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
+        products = driver.find_elements(By.XPATH, "//*")
+        # products = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
         #  first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
+        for element in products:
+            logging.info(element.tag_name, element.text)
 
         print(f"製品タイトル数:{len(products)}")
         logging.info(f"製品タイトル数:{len(products)}")
 
         asin_list = []
-        for product in products:
-            # 製品タイトルのテキストを取得
-            title_element = product.find_element(By.CSS_SELECTOR, 'span.a-size-base-plus.a-color-base.a-text-normal')
-            title_text = title_element.text
+        # for product in products:
+        #     # 製品タイトルのテキストを取得
+        #     title_element = product.find_element(By.CSS_SELECTOR, 'span.a-size-base-plus.a-color-base.a-text-normal')
+        #     title_text = title_element.text
 
-            # 製品の値段を取得（LEVOITのフィルタ商品を除外するため）
-            try:
-                money_element = product.find_element(By.CSS_SELECTOR, 'span.a-price-whole')
-                money_text = int(money_element.text.replace(',',''))
-            except NoSuchElementException:
-                money_element = ""
+        #     # 製品の値段を取得（LEVOITのフィルタ商品を除外するため）
+        #     try:
+        #         money_element = product.find_element(By.CSS_SELECTOR, 'span.a-price-whole')
+        #         money_text = int(money_element.text.replace(',',''))
+        #     except NoSuchElementException:
+        #         money_element = ""
 
-            # 指定された製品名がタイトルに含まれているかチェック
-            if scr.normalize_string(row['Item']) not in scr.normalize_string(title_text):
-                continue
-            # LEVOIT以外はフィルタ―製品除外
-            if row['BRAND'] != "LEVOIT":
-                ### フィルタ製品じゃないかどうか
-                if "フィルタ" in title_text or "交換" in title_text or "セット買い" in title_text or "リモコン" in title_text:
-                    continue
-            else:
-                ### LEVOITの場合は値段でフィルタ判断
-                if money_text <= 7000 or "用フィルタ" in title_text or "空気清浄機用" in title_text or "交換" in title_text:
-                    continue
+        #     # 指定された製品名がタイトルに含まれているかチェック
+        #     if scr.normalize_string(row['Item']) not in scr.normalize_string(title_text):
+        #         continue
+        #     # LEVOIT以外はフィルタ―製品除外
+        #     if row['BRAND'] != "LEVOIT":
+        #         ### フィルタ製品じゃないかどうか
+        #         if "フィルタ" in title_text or "交換" in title_text or "セット買い" in title_text or "リモコン" in title_text:
+        #             continue
+        #     else:
+        #         ### LEVOITの場合は値段でフィルタ判断
+        #         if money_text <= 7000 or "用フィルタ" in title_text or "空気清浄機用" in title_text or "交換" in title_text:
+        #             continue
 
-            print(f"タイトル：{title_text}")
-            logging.info(f"タイトル：{title_text}")
-            asin = product.get_attribute("data-asin")
-            print(asin)
-            logging.info(asin)
+        #     print(f"タイトル：{title_text}")
+        #     logging.info(f"タイトル：{title_text}")
+        #     asin = product.get_attribute("data-asin")
+        #     print(asin)
+        #     logging.info(asin)
 
-            ### DataFrameに登録
-            columns = ['POS_ID','BRAND','Item','asinID']
-            values = [row['POS_ID'],row['BRAND'],row['Item'],asin] 
-            scr.add_df(values,columns)
+        #     ### DataFrameに登録
+        #     columns = ['POS_ID','BRAND','Item','asinID']
+        #     values = [row['POS_ID'],row['BRAND'],row['Item'],asin] 
+        #     scr.add_df(values,columns)
 
 
         #全てのクッキーを削除
