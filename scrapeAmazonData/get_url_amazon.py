@@ -51,7 +51,7 @@ def get_url_amazon(get_pos):
             # LEVOIT以外はフィルタ―製品除外
             if row['BRAND'] != "LEVOIT":
                 ### フィルタ製品じゃないかどうか
-                if "フィルタ" in title_text:
+                if "フィルタ" in title_text or "交換" in title_text or "セット買い" in title_text or "リモコン" in title_text:
                     continue
             else:
                 ### LEVOITの場合は値段でフィルタ判断
