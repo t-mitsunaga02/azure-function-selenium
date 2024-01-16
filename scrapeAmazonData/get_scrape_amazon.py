@@ -39,6 +39,8 @@ def get_scrape_amazon(url_data):
             print(f'レビュー数:{len(reviews)}')
             logging.info(f'ページ数:{n}')
             logging.info(f'レビュー数:{len(reviews)}')
+            for element in reviews:
+                logging.info(f"テキスト:{element.tag_name}, {element.text}")
 
             #レビューの数だけループ
             for review in reviews:
