@@ -14,20 +14,28 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # クラスファイルの呼び出し
     scr = Scrape(wait=2,max=5)
 
-    # 1.POSデータの読み込み
-    pos_data = get_pos()
-    logging.info("POS:")
-    logging.info(pos_data.head())
-    print(pos_data.head())
+    # # 1.POSデータの読み込み
+    # pos_data = get_pos()
+    # logging.info("POS:")
+    # logging.info(pos_data.head())
+    # print(pos_data.head())
 
-    # 2.AmazonURL検索
-    url_data_amazon = get_url_amazon(pos_data)
-    logging.info("URLamazon:")
-    logging.info(url_data_amazon.df.head())
-    print(url_data_amazon.df)
+    # # 2.AmazonURL検索
+    # url_data_amazon = get_url_amazon(pos_data)
+    # logging.info("URLamazon:")
+    # logging.info(url_data_amazon.df.head())
+    # print(url_data_amazon.df)
+
+
+    pos_id_data = ['POS1', 'POS2', 'POS3']
+    brand_data = ['SHARP', 'DAIKIN', 'SHARP']
+    item_data = ['FU-L30', 'MCK55X', 'KI-JP100']
+    asinid_data = ['B07Z8P3WFH', 'B08P4PBQV1', 'B07JW4PJYM']
+    url_data_amazon = pd.DataFrame({'POS_ID': pos_id_data, 'BRAND': brand_data, 'Item': item_data, 'asinID': asinid_data})
+
 
     # 3.Amazonスクレイピング
-    scrape_data_amazon = get_scrape_amazon(url_data_amazon.df)
+    scrape_data_amazon = get_scrape_amazon(url_data_amazon)
     logging.info("scrapeamazon:")
     logging.info(scrape_data_amazon)
     print(scrape_data_amazon.head())
