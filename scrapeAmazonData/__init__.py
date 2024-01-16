@@ -42,7 +42,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         
     # Create a blob client using the local file name as the name for the blob
     blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    blob_client = blob_service_client.get_blob_client("scrapefile", "dashboard_KPI/scrapeamazondata.csv")
+    blob_client = blob_service_client.get_blob_client("scrapefile", "dashboard_motive/scrapeamazondata.csv")
         
     # Upload the created file
     blob_client.upload_blob(csv_buffer.getvalue(), blob_type="BlockBlob", overwrite=True)

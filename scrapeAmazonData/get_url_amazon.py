@@ -1,3 +1,4 @@
+import logging
 from .class_file import Scrape
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -20,6 +21,7 @@ def get_url_amazon(get_pos):
 
         ## Amazonの検索ページを表示する
         target = f"https://www.amazon.co.jp/s?k={row['BRAND']}+{row['Item']}&crid=3M1NNK3XMSY5M&sprefix=kc-n50%2Caps%2C174&ref=nb_sb_noss_1"
+        logging.info(f"URL取得：{target}")
         print(target)
         driver.get(target)
 
@@ -31,6 +33,7 @@ def get_url_amazon(get_pos):
         #  first_link = first_result.find_element(By.XPATH, '..').get_attribute('href')
 
         print(f"製品タイトル数:{len(products)}")
+        logging.info(f"製品タイトル数:{len(products)}")
 
         asin_list = []
         for product in products:
@@ -59,8 +62,10 @@ def get_url_amazon(get_pos):
                     continue
 
             print(f"タイトル：{title_text}")
+            logging.info(f"タイトル：{title_text}")
             asin = product.get_attribute("data-asin")
             print(asin)
+            logging.info(asin)
 
             ### DataFrameに登録
             columns = ['POS_ID','BRAND','Item','asinID']

@@ -1,3 +1,4 @@
+import logging
 from .class_file import Scrape
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -26,7 +27,8 @@ def get_scrape_amazon(url_data):
             # Selenium 設定
             driver = scr.get_driver()
             driver.get(target)
-            print(f"取得URL：{target}")
+            print(f"ページ遷移：{target}")
+            logging.info(f"ページ遷移：{target}")
 
             time.sleep(5)
 
@@ -34,6 +36,8 @@ def get_scrape_amazon(url_data):
             reviews = driver.find_elements(By.CSS_SELECTOR, 'div.a-section.review.aok-relative')
             print(f'ページ数:{n}')
             print(f'レビュー数:{len(reviews)}')
+            logging.info(f'ページ数:{n}')
+            logging.info(f'レビュー数:{len(reviews)}')
 
             #レビューの数だけループ
             for review in reviews:
